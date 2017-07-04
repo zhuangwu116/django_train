@@ -8,6 +8,8 @@ from django.views.generic.detail import DetailView
 from django.views.generic.base import RedirectView
 from django.views.generic.list import ListView
 from django.views.generic.edit import FormView
+from django.views.generic.edit import CreateView
+from django.views.generic.edit import UpdateView
 from base_view.models import *
 from base_view.forms import *
 
@@ -74,4 +76,28 @@ class ArticleFormView(FormView):
         print form.cleaned_data['context']
         print form.cleaned_data['create_at']
         return super(ArticleFormView,self).form_valid(form)
+
+class ArticleCreateView(CreateView):
+    model = Article
+    #fields这是一个必需的属性，如果你是自动生成表单类（例如。使用model）。省略此属性将导致ImproperlyConfigured异常。
+    fields = ['title','context','create_at']
+    success_url = '/base_view/thanks/'
+    template_name = 'base_view/article_form.html'
+
+    def form_valid(self, form):
+        print "ArticleCreateView"
+        return super(ArticleCreateView,self).form_valid(form)
+
+    def form_invalid(self, form):
+
+        return super(ArticleCreateView,self).form_invalid(form)
+
+class ArticleUpdateView(UpdateView):
+    model = Article
+    fields = ['title', 'context', 'create_at']
+    template_name = 'base_view/article_form.html'
+
+
+
+
 
