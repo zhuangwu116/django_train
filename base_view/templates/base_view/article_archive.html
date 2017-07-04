@@ -1,0 +1,5 @@
+<ul>
+    {% for article in latest %}
+        <li>{{ article.create_at|date:'Y-m-d' }}: {{ article.title }}</li>
+    {% endfor %}
+</ul>

@@ -1,6 +1,8 @@
 from django.conf.urls import url
 from base_view import views
 from django.views.generic import TemplateView
+from django.views.generic.dates import ArchiveIndexView
+from base_view.models import *
 urlpatterns=[
     url(r'^index$',TemplateView.as_view(template_name='base_view/index.html'),name='index'),
     url(r'^myview/(?P<pk>\d+)$',views.MyView.as_view(),name='myview'),
@@ -15,5 +17,7 @@ urlpatterns=[
     url(r'^createview/$', views.ArticleCreateView.as_view(), name='createview'),
     url(r'^updateview/(?P<pk>[0-9]+)/$', views.ArticleUpdateView.as_view(), name='updateview'),
     url(r'^deleteview/(?P<pk>[0-9]+)/$',views.ArticleDeleteView.as_view(),name='deleteview'),
+    url(r'^archive_index/$', ArchiveIndexView.as_view(model=Article,date_field="create_at",template_name='base_view/article_archive.html'),
+        name='archive_index'),
 
 ]

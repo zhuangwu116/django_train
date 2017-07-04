@@ -9,6 +9,8 @@ from django.views.generic.detail import DetailView
 from django.views.generic.base import RedirectView
 from django.views.generic.list import ListView
 from django.views.generic.edit import FormView,CreateView,UpdateView,DeleteView
+
+
 from base_view.models import *
 from base_view.forms import *
 
@@ -101,6 +103,8 @@ class ArticleDeleteView(DeleteView):
     model = Article
     success_url = reverse_lazy('base_view:article-list')
     template_name = 'base_view/article_delete.html'
+
+
 
 
 
