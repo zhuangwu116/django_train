@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .condition a{
+            border: solid 1px black;
+            padding: 5px 8px;
+            display: inline-block;
+        }
+        .condition a.active{
+            background-color: #dd77b4;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="condition">
+    <h2>帅</h2>
+
+    <div>
+    {% if kwargs.classification_id == 0 %}
+        <a href="{% url 'video' 0 kwargs.level_id %}" class="active">全部</a>
+        {% else %}
+        <a href="{% url 'video' 0 kwargs.level_id %}">全部</a>
+    {% endif %}
+    {% for item in class_list %}
+        {% if item.id == kwargs.classification_id %}
+            <a href="{% url 'video' item.id kwargs.level_id %}" class="active">{{ item.name }}</a>
+        {% else %}
+            <a href="{% url 'video' item.id kwargs.level_id %}">{{ item.name }}</a>
+        {% endif %}
+    {% endfor %}
+    </div>
+    <div>
+        {% if kwargs.level_id == 0 %}
+        <a href="{% url 'video' kwargs.classification_id 0 %}" class="active">全部</a>
+        {% else %}
+        <a href="{% url 'video' kwargs.classification_id 0 %}">全部</a>
+        {% endif %}
+    {% for item in level_list %}
+        {% if item.id == kwargs.level_id %}
+        <a class="active" href="{% url 'video' kwargs.classification_id item.id %}">{{ item.title }}</a>
+        {% else %}
+            <a href="{% url 'video' kwargs.classification_id item.id %}">{{ item.title }}</a>
+        {% endif %}
+    {% endfor %}
+    </div>
+    <h2>视屏</h2>
+    {% for item in video_list %}
+        <p>{{ item.title }}</p>
+    {% endfor %}
+</div>
+</body>
+</html>

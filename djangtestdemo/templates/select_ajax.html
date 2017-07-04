@@ -1,0 +1,6 @@
+<select name="name_{{ count }}" class="select" id="select_{{ count }}">
+     <option value=""  selected = "selected">---------</option>
+    {% for category in categoryList %}
+        <option value="{{ category.id }}" >{{ category.name }}</option>
+    {% endfor %}
+</select>

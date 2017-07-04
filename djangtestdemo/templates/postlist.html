@@ -1,0 +1,92 @@
+{% extends 'index.html' %}
+{% load staticfiles %}
+{% block extra_js_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'changelists.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'base.css' %}">
+    <script type="text/javascript" src="{% static 'jquery-1.8.2.min.js' %}"></script>
+    <script type="text/javascript">
+        function selectAll() {
+            if($('#action-toggle').attr("checked")){
+                $("#tbody :checkbox").attr("checked",true)
+            }else{
+                $("#tbody :checked").attr("checked",false)
+            }
+        }
+    </script>
+{% endblock %}
+
+{% block contentbody %}
+<div id="content-main">
+    <div class="module" id="changelist">
+            <div class="actions">
+                <label>Action:
+                    <select name="action" required="">
+                        <option value="" selected="">---------</option>
+                        <option value="delete_selected">Delete selected article categorys</option>
+                    </select>
+                </label>
+                <input type="hidden" name="select_across" value="0" class="select-across">
+{#                <button type="submit" class="button" title="Run the selected action" name="index" value="0">Go</button>#}
+                <span class="action-counter" data-actions-icnt="4" style="display: inline;">0 of 4 selected</span>
+            </div>
+            <div class="results">
+                <form id="changelist-form" action="{% url 'post_list' %}" method="post" novalidate="">{% csrf_token %}
+                <table id="result_list">
+                    <thead>
+                    <tr>
+                        <th scope="col" class="action-checkbox-column">
+                            <div class="text"><span><input type="checkbox" id="action-toggle" onclick="selectAll();"><button type="submit" class="button" title="Run the selected action" name="index" value="0">删除</button></span></div>
+                            <div class="clear"></div>
+                        </th>
+                        <th scope="col" class="column-treenode">
+                            <div class="text"><span>序号</span></div>
+                            <div class="clear"></div>
+                        </th>
+                        <th scope="col" class="column-patha">
+                            <div class="text"><span>菜单ID</span></div>
+                            <div class="clear"></div>
+                        </th>
+                        <th scope="col" class="sortable column-id">
+                            <div class="text"><a href="?o=3">名称</a></div>
+                            <div class="clear"></div>
+                        </th>
+                        <th scope="col" class="sortable column-serialnumber">
+                            <div class="text"><a href="?o=4">链接</a></div>
+                            <div class="clear"></div>
+                        </th>
+                        <th scope="col" class="sortable column-serialnumber">
+                            <div class="text"><a href="?o=4">日期</a></div>
+                            <div class="clear"></div>
+                        </th>
+                        <th scope="col" class="sortable column-serialnumber">
+                            <div class="text"><a href="?o=4">有效</a></div>
+                            <div class="clear"></div>
+                        </th>
+                        <th scope="col" class="sortable column-serialnumber">
+                            <div class="text"><a href="?o=4">操作</a></div>
+                            <div class="clear"></div>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody id="tbody">
+                    {% for objtr in menulist %}
+                        <tr class="row1">
+                        <td class="action-checkbox"><input type="checkbox" name="_selected_action" value="{{ objtr.id }}" class="action-select">选择</td>
+                        <td class="field-serialnumber">{{ objtr.serialnumber }}</td>
+                        <td class="field-id">{{ objtr.id }}</td>
+                        <th class="field-name">{{ objtr.html|safe }}</th>
+                        <td class="field-line">{{ objtr.line }}</td>
+                        <td class="field-date">{{ objtr.date|date:"Ymd" }}</td>
+                        <td class="field-isvalid">{% if objtr.isvalid %}是{% else %}否{% endif %}</td>
+                        <td class="field-caozuo"><a href=""><span>查看</span></a><a href=""><span>编辑</span></a><a href="{% url 'post_list' %}?id={{ objtr.id }}"><span>删除</span></a></td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                </form>
+            </div>
+            <p class="paginator">4 article categorys</p>
+
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load staticfiles %}
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/scripts.js' %}"></script>
+</head>
+<body>
+<div id="header_wrapper">
+    <header>
+        <div class="container">
+            <div id="logo">
+                <h1><a href="index.html"><img src="{% static 'images/logo.jpg' %}" alt="集团首页"></a></h1>
+            </div>
+            <div id="sousuo">
+                <form action="index.html">
+                    <input type="text" placeholder="搜索其实很简单"/><input type="submit" value="搜索"/>
+                </form>
+            </div>
+        </div>
+        <div id="nav">
+            <nav class="container">
+                <ul>
+                    <li class="on"><a href="index.html">集团首页</a> </li><li>
+                    <a href="piclist.html">产品列表</a> </li><li>
+                    <a href="list.html">新闻列表</a> </li><li>
+                    <a href="content.html">内容页面</a> </li><li>
+                    <a href="index.html">关于我们</a> </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+</div>
+<div id="body_wrapper"  class="container">
+  <article>
+      <section id="lunbotu">
+          <div class="wrap">
+              <div id="slide-holder">
+                  <div id="slide-runner">
+                      <a href="/"><img id="slide-img-1" src="{% static 'images/a1.jpg' %}" class="slide" alt="" /></a>
+                      <a href="/"><img id="slide-img-2" src="{% static 'images/a2.jpg' %}" class="slide" alt="" /></a>
+                      <a href="/"><img id="slide-img-3" src="{% static 'images/a3.jpg' %}" class="slide" alt="" /></a>
+                      <a href="/"><img id="slide-img-4" src="{% static 'images/a4.jpg' %}" class="slide" alt="" /></a>
+                      <a href="/"><img id="slide-img-5" src="{% static 'images/a5.jpg' %}" class="slide" alt="" /></a>
+                      <a href="/"><img id="slide-img-6" src="{% static 'images/a6.jpg' %}" class="slide" alt="" /></a>
+                      <a href="/"><img id="slide-img-7" src="{% static 'images/a4.jpg' %}" class="slide" alt="" /></a>
+                      <div id="slide-controls">
+                          <p id="slide-client" class="text"><strong>联盟推荐: </strong><span></span></p>
+                          <p id="slide-desc" class="text"></p>
+                          <p id="slide-nav"></p>
+                      </div>
+                  </div>
+              </div>
+              <script type="text/javascript">
+                  if(!window.slider) var slider={};slider.data=[{"id":"slide-img-1","client":"标题在这里","desc":"这里是描述信息"},{"id":"slide-img-2","client":"标题在这里","desc":"这里是描述信息"},{"id":"slide-img-3","client":"标题在这里","desc":"这里是描述信息"},{"id":"slide-img-4","client":"标题在这里","desc":"这里是描述信息"},{"id":"slide-img-5","client":"标题在这里","desc":"这里是描述信息"},{"id":"slide-img-6","client":"标题在这里","desc":"这里是描述信息"},{"id":"slide-img-7","client":"标题在这里","desc":"这里是描述信息"}];
+              </script>
+          </div>
+      </section>
+      <section id="xinwen">
+          <div class="title_bg">
+              <h2><a href="list.html">集团会员新闻</a> </h2>
+          </div>
+          <ul>
+              <li>
+                  <a href="content.html"><img src="{% static 'images/news_10.jpg' %}" alt="新闻简介"></a><a href="content.html" class="ms">
+                  <div class="sanjiaoxing"></div>
+                  <h3>新闻标题</h3>
+                  <p>2017年3月6日，独检组公布最终调查结果，确认朴槿惠涉嫌滥用职权、强迫、强迫未遂、泄露公务机密等8大嫌疑，还有收受贿赂、滥用职权(三项)和违反医疗法等5项嫌疑，共涉嫌13项罪名；</p>
+              </a>
+              </li>
+              <li>
+                 <a href="content.html"><img src="{% static 'images/news_10.jpg' %}" alt="新闻简介"></a><a href="content.html" class="ms">
+                  <div class="sanjiaoxing"></div>
+                   <h3>新闻标题</h3>
+                      <p>2017年3月6日，独检组公布最终调查结果，确认朴槿惠涉嫌滥用职权、强迫、强迫未遂、泄露公务机密等8大嫌疑，还有收受贿赂、滥用职权(三项)和违反医疗法等5项嫌疑，共涉嫌13项罪名；</p>
+                  </a>
+              </li>
+              <li>
+                  <a href="content.html"><img src="{% static 'images/news_10.jpg' %}" alt="新闻简介"></a><a href="content.html" class="ms">
+                  <div class="sanjiaoxing"></div>
+                  <h3>新闻标题</h3>
+                      <p>2017年3月6日，独检组公布最终调查结果，确认朴槿惠涉嫌滥用职权、强迫、强迫未遂、泄露公务机密等8大嫌疑，还有收受贿赂、滥用职权(三项)和违反医疗法等5项嫌疑，共涉嫌13项罪名；</p>
+                  </a>
+              </li>
+              <li>
+                  <a href="content.html"><img src="{% static 'images/news_10.jpg' %}" alt="新闻简介"></a><a href="content.html" class="ms">
+                  <div class="sanjiaoxing"></div>
+                  <h3>新闻标题</h3>
+                      <p>2017年3月6日，独检组公布最终调查结果，确认朴槿惠涉嫌滥用职权、强迫、强迫未遂、泄露公务机密等8大嫌疑，还有收受贿赂、滥用职权(三项)和违反医疗法等5项嫌疑，共涉嫌13项罪名；</p>
+                  </a>
+              </li>
+          </ul>
+      </section>
+      <section id="huodong">
+          <div class="title_bg">
+              <h2><a href="list.html">集团活动</a> </h2>
+          </div>
+          <section id="huodong_a">
+              <ul>
+                  <li><a href="content.html"><img src="{% static 'images/hd_1.jpg' %}"></a> </li><li>
+                      <a href="content.html"><img src="{% static 'images/hd2.jpg' %}"></a> </li><li>
+                      <a href="content.html"><img src="{% static 'images/hd3.jpg' %}"></a> </li><li>
+                      <a href="content.html"><img src="{% static 'images/hd2.jpg' %}"></a> </li>
+              </ul>
+          </section>
+          <section id="huodong_b">
+              <ul>
+                  <li><a href="content.html">新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长</a> </li>
+                  <li><a href="content.html">新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长</a> </li>
+                  <li><a href="content.html">新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长</a> </li>
+                  <li><a href="content.html">新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长</a> </li>
+                  <li><a href="content.html">新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长</a> </li>
+                  <li><a href="content.html">新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长</a> </li>
+                  <li><a href="content.html">新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长</a> </li>
+                  <li><a href="content.html">新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长</a> </li>
+                  <li><a href="content.html">新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长</a> </li>
+                  <li><a href="content.html">新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长</a> </li>
+              </ul>
+          </section><section id="huodong_c">
+              <ul>
+                  <li><a href="content.html"><img src="{% static 'images/hd_17.jpg' %}"></a> </li>
+                  <li><a href="content.html"><img src="{% static 'images/hdd_20.jpg' %}"></a> </li><li>
+
+              </ul>
+          </section>
+      </section>
+  </article><aside>
+        <section id="bowen">
+            <div class="title_bg">
+                <h2><a href="list.html">精彩博文</a> </h2>
+            </div>
+            <section id="bowen_a">
+                <ul>
+                    <li><a href="content.html"><img src="{% static 'images/bowen_06.jpg' %}"><a href="content.html">精彩博文标题</a></a></li><li>
+                    <a href="content.html"><img src="{% static 'images/bowen_06.jpg' %}"><a href="content.html">精彩博文标题</a></a></li>
+                </ul>
+
+            </section>
+            <section id="bowen_b">
+                <ul>
+                    <li><a href="content.html">新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长</a> </li>
+                    <li><a href="content.html">新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长</a> </li>
+                    <li><a href="content.html">新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长</a> </li>
+                </ul>
+            </section>
+        </section>
+        <section id="zhaopin">
+            <div class="title_bg">
+                <h2><a href="list.html">职位信息</a> </h2>
+            </div>
+            <ul>
+                <li><a href="content.html">新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长</a> </li>
+                <li><a href="content.html">新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长</a> </li>
+                <li><a href="content.html">新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长</a> </li>
+                <li><a href="content.html">新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长</a> </li>
+                <li><a href="content.html">新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长</a> </li>
+                <li><a href="content.html">新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长</a> </li>
+                <li><a href="content.html">新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长</a> </li>
+                <li><a href="content.html">新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长</a> </li>
+                <li><a href="content.html">新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长</a> </li>
+                <li><a href="content.html">新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长新闻标题很长很长</a> </li>
+            </ul>
+        </section>
+        <section id="lianxi">
+            <div class="title_bg">
+                <h2><a href="list.html">联系我们</a> </h2>
+            </div>
+            <a href="content.html"><img src="{% static 'images/about_13.jpg' %}"></a>
+        </section>
+        <section id="zigongsi">
+            <div class="title_bg">
+                <h2><a href="list.html">集团子公司</a> </h2>
+            </div>
+            <ui>
+                <li>
+                    <h4><a href="content.html">子公司名称</a> </h4>
+                    <div class="zgsjj">
+                        <a href="content.html"><img src="{% static 'images/menber_19.jpg' %}"></a>
+                        <a href="content.html">彭某是承包工程的,欠了一大笔工程款,为了还钱,他可真是费了大功夫。这还不算完,彭某还把房子抵押了,而且还欠了别人510万元。</a>
+                    </div>
+                </li>
+                <li>
+                    <h4><a href="content.html">子公司名称</a> </h4>
+                    <div class="zgsjj">
+                        <a href="content.html"><img src="{% static 'images/menber_19.jpg' %}"></a>
+                        <a href="content.html">彭某是承包工程的,欠了一大笔工程款,为了还钱,他可真是费了大功夫。这还不算完,彭某还把房子抵押了,而且还欠了别人510万元。</a>
+                    </div>
+                </li>
+                <li>
+                    <h4><a href="content.html">子公司名称</a> </h4>
+                    <div class="zgsjj">
+                        <a href="content.html"><img src="{% static 'images/menber_19.jpg' %}"></a>
+                        <a href="content.html">彭某是承包工程的,欠了一大笔工程款,为了还钱,他可真是费了大功夫。这还不算完,彭某还把房子抵押了,而且还欠了别人510万元。</a>
+                    </div>
+                </li>
+                <li>
+                    <h4><a href="content.html">子公司名称</a> </h4>
+                    <div class="zgsjj">
+                        <a href="content.html"><img src="{% static 'images/menber_19.jpg' %}"></a>
+                        <a href="content.html">彭某是承包工程的,欠了一大笔工程款,为了还钱,他可真是费了大功夫。这还不算完,彭某还把房子抵押了,而且还欠了别人510万元。</a>
+                    </div>
+                </li>
+                <li>
+                    <h4><a href="content.html">子公司名称</a> </h4>
+                    <div class="zgsjj">
+                        <a href="content.html"><img src="{% static 'images/menber_19.jpg' %}"></a>
+                        <a href="content.html">彭某是承包工程的,欠了一大笔工程款,为了还钱,他可真是费了大功夫。这还不算完,彭某还把房子抵押了,而且还欠了别人510万元。</a>
+                    </div>
+                </li>
+                <li>
+                    <h4><a href="content.html">子公司名称</a> </h4>
+                    <div class="zgsjj">
+                        <a href="content.html"><img src="{% static 'images/menber_19.jpg' %}"></a>
+                        <a href="content.html">彭某是承包工程的,欠了一大笔工程款,为了还钱,他可真是费了大功夫。这还不算完,彭某还把房子抵押了,而且还欠了别人510万元。</a>
+                    </div>
+                </li>
+                <li>
+                    <h4><a href="content.html">子公司名称</a> </h4>
+                    <div class="zgsjj">
+                        <a href="content.html"><img src="{% static 'images/menber_19.jpg' %}"></a>
+                        <a href="content.html">彭某是承包工程的,欠了一大笔工程款,为了还钱,他可真是费了大功夫。这还不算完,彭某还把房子抵押了,而且还欠了别人510万元。</a>
+                    </div>
+                </li>
+                <li>
+                    <h4><a href="content.html">子公司名称</a> </h4>
+                    <div class="zgsjj">
+                        <a href="content.html"><img src="{% static 'images/menber_19.jpg' %}"></a>
+                        <a href="content.html">彭某是承包工程的,欠了一大笔工程款,为了还钱,他可真是费了大功夫。这还不算完,彭某还把房子抵押了,而且还欠了别人510万元。</a>
+                    </div>
+                </li>
+            </ui>
+        </section>
+    </aside>
+</div>
+<div id="footer_wrapper">
+    <footer>
+
+    </footer>
+</div>
+
+</body>
+</html>

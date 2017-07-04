@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ username }}</title>
+    {% block extra_js_css %}
+    {% endblock %}
+</head>
+<body>
+{% block contentbody %}
+    <a href="{% url 'post_list' %}">链接</a>
+{% endblock %}
+</body>
+</html>
