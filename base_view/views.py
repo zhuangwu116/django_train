@@ -3,13 +3,12 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render,get_object_or_404
 from django.http import HttpResponse
+from django.urls import reverse_lazy
 from django.views.generic import View,TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.base import RedirectView
 from django.views.generic.list import ListView
-from django.views.generic.edit import FormView
-from django.views.generic.edit import CreateView
-from django.views.generic.edit import UpdateView
+from django.views.generic.edit import FormView,CreateView,UpdateView,DeleteView
 from base_view.models import *
 from base_view.forms import *
 
@@ -53,7 +52,7 @@ class ArticleDetailView(DetailView):
         context['now']=timezone.now()
         return context
 
-
+#http://127.0.0.1:8000/base_view/article_list?page=2
 class ArticleListView(ListView):
     model = Article
     paginate_by = 3
@@ -96,6 +95,12 @@ class ArticleUpdateView(UpdateView):
     model = Article
     fields = ['title', 'context', 'create_at']
     template_name = 'base_view/article_form.html'
+
+
+class ArticleDeleteView(DeleteView):
+    model = Article
+    success_url = reverse_lazy('base_view:article-list')
+    template_name = 'base_view/article_delete.html'
 
 
 

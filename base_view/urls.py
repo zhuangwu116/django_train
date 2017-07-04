@@ -14,5 +14,6 @@ urlpatterns=[
     url(r'^formview/$', views.ArticleFormView.as_view(), name='formview'),
     url(r'^createview/$', views.ArticleCreateView.as_view(), name='createview'),
     url(r'^updateview/(?P<pk>[0-9]+)/$', views.ArticleUpdateView.as_view(), name='updateview'),
+    url(r'^deleteview/(?P<pk>[0-9]+)/$',views.ArticleDeleteView.as_view(),name='deleteview'),
 
 ]
