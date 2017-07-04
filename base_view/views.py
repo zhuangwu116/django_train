@@ -62,8 +62,10 @@ class ArticleListView(ListView):
         return context
 #显示表单的视图。发送错误时，重新显示表单和验证的错误；成功时，重定向到一个新的URL。
 class ArticleFormView(FormView):
+
     template_name = 'base_view/article_form.html'
     form_class = ArticleForm
+    initial = {"title":"title","context":"context","create_at":timezone.now(),}
     success_url = '/base_view/thanks/'
 
     def form_valid(self, form):

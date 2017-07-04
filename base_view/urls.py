@@ -8,5 +8,9 @@ urlpatterns=[
     url(r'^counter/(?P<pk>[0-9]+)/$', views.ArticleCounterRedirectView.as_view(), name='article-counter'),
     url(r'^(?P<pk>[0-9]+)/$',views.ArticleDetailView.as_view(),name='article-detail'),
     url(r'^article_list$',views.ArticleListView.as_view(),name='article-list'),
+
     url(r'^thanks/$', views.thanks, name='thanks'),
+
+    url(r'^formview/$', views.ArticleFormView.as_view(), name='thanks'),
+
 ]
