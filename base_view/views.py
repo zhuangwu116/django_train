@@ -2,12 +2,18 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render,get_object_or_404
-from django.views.generic import View,TemplateView
 from django.http import HttpResponse
+from django.views.generic import View,TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.base import RedirectView
 from django.views.generic.list import ListView
+from django.views.generic.edit import FormView
 from base_view.models import *
+from base_view.forms import *
+
+def thanks(request):
+    return HttpResponse('success')
+
 
 class MyView(View):
     http_method_names = ['post','get']
@@ -54,4 +60,16 @@ class ArticleListView(ListView):
     def get_context_data(self, **kwargs):
         context=super(ArticleListView,self).get_context_data(**kwargs)
         return context
+#显示表单的视图。发送错误时，重新显示表单和验证的错误；成功时，重定向到一个新的URL。
+class ArticleFormView(FormView):
+    template_name = 'base_view/article_form.html'
+    form_class = ArticleForm
+    success_url = '/base_view/thanks/'
+
+    def form_valid(self, form):
+        print 'articleformview'
+        print form.cleaned_data['title']
+        print form.cleaned_data['context']
+        print form.cleaned_data['create_at']
+        return super(ArticleFormView,self).form_valid(form)
 
