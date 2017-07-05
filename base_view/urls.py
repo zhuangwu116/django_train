@@ -2,6 +2,7 @@ from django.conf.urls import url
 from base_view import views
 from django.views.generic import TemplateView
 from django.views.generic.dates import ArchiveIndexView
+from django.views.generic.dates import DateDetailView
 from base_view.models import *
 urlpatterns=[
     url(r'^index$',TemplateView.as_view(template_name='base_view/index.html'),name='index'),
@@ -27,4 +28,8 @@ urlpatterns=[
         views.ArticleWeekArchiveView.as_view(), name='archive_week'),
     url(r'^archive_day/(?P<year>[0-9]{4})/(?P<month>[-\w]+)/(?P<day>[0-9]+)/$',
         views.ArticleDayArchiveView.as_view(), name='archive_day'),
+
+    url(r'^archive_date_detail/(?P<year>[0-9]{4})/(?P<month>[-\w]+)/(?P<day>[0-9]+)/(?P<pk>[0-9]+)/$',
+        DateDetailView.as_view(template_name='base_view/article_detail.html',model=Article, date_field="pub_date"),
+        name="archive_date_detail"),
 ]
