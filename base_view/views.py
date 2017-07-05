@@ -192,8 +192,3 @@ class ArticleDayArchiveView(DayArchiveView):
     date_field = 'create_at'
     allow_future = True
     template_name = 'base_view/article_archive_day.html'
-
-
-
-
-
