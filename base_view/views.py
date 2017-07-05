@@ -61,6 +61,7 @@ class ArticleListView(ListView):
     model = Article
     paginate_by = 3
     allow_empty = True
+    context_object_name = 'article_objs'
     template_name = 'base_view/article_list.html'
     def get_context_data(self, **kwargs):
         context=super(ArticleListView,self).get_context_data(**kwargs)
