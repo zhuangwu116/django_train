@@ -58,6 +58,7 @@ class ArticleDetailView(DetailView):
 
 #http://127.0.0.1:8000/base_view/article_list?page=2
 class ArticleListView(ListView):
+    #指定model = Article等价于快速声明的queryset = Article.objects.all()。
     model = Article
     paginate_by = 3
     allow_empty = True
