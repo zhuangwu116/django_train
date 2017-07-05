@@ -9,6 +9,8 @@ from django.views.generic.detail import DetailView
 from django.views.generic.base import RedirectView
 from django.views.generic.list import ListView
 from django.views.generic.edit import FormView,CreateView,UpdateView,DeleteView
+from django.views.generic.dates import YearArchiveView,MonthArchiveView,WeekArchiveView,\
+    DayArchiveView,TodayArchiveView,DateDetailView
 
 
 from base_view.models import *
@@ -105,6 +107,91 @@ class ArticleDeleteView(DeleteView):
     template_name = 'base_view/article_delete.html'
 
 
+#一个年度归档页面，显示给定年份中的所有可用月份。除非您将allow_future设置为True，否则不会显示未来中日期的对象。
+
+# make_object_list
+# 一个布尔值，指定是否检索今年的完整对象列表，并将其传递给模板。如果True，对象列表将可用于上下文。如果False，则None查询集将用作对象列表。默认情况下，这是False。
+#
+# get_make_object_list()
+# 确定对象列表是否将作为上下文的一部分返回。默认返回make_object_list。
+#
+# 上下文
+#
+# 除了django.views.generic.list.MultipleObjectMixin（通过django.views.generic.dates.BaseDateListView）提供的上下文，模板的上下文将是：
+#
+# date_list: A DateQuerySet object containing all months that have objects available according to queryset, represented as datetime.datetime objects, in ascending order.
+# year：代表给定年份的date对象。
+# next_year：根据allow_empty和allow_future，表示下一年第一天的date对象。
+# previous_year：根据allow_empty和allow_future，表示上一年第一天的date对象。
+# 备注
+#
+# 使用_archive_year的默认template_name_suffix。
+class ArticleYearArchiveView(YearArchiveView):
+    queryset = Article.objects.all()
+    date_field = 'create_at'
+    make_object_list = True
+    allow_future = True
+    template_name = 'base_view/article_archive_year.html'
+#显示给定月份中所有对象的月度归档页面。除非您将allow_future设置为True，否则不会显示未来中日期的对象。
+
+# 上下文
+#
+# 除了MultipleObjectMixin（通过BaseDateListView）提供的上下文，模板的上下文将是：
+#
+# date_list: A DateQuerySet object containing all days that have objects available in the given month, according to queryset, represented as datetime.datetime objects, in ascending order.
+# month：表示给定月份的date对象。
+# next_month：根据allow_empty和allow_future，表示下个月第一天的date对象。
+# previous_month：根据allow_empty和allow_future，表示上个月第一天的date对象。
+# 备注
+#
+# 使用_archive_month的默认template_name_suffix。
+class ArticleMonthArchiveView(MonthArchiveView):
+    queryset = Article.objects.all()
+    date_field = 'create_at'
+    allow_future = True
+    template_name = 'base_view/article_archive_month.html'
+
+
+#显示给定周内所有对象的每周归档页面。除非您将allow_future设置为True，否则不会显示未来中日期的对象。
+# 上下文
+#
+# 除了MultipleObjectMixin（通过BaseDateListView）提供的上下文，模板的上下文将是：
+#
+# week：表示给定周的第一天的date对象。
+# next_week：根据allow_empty和allow_future表示下周第一天的date对象。
+# previous_week：根据allow_empty和allow_future，表示前一周第一天的date对象。
+# 备注
+#
+# 使用_archive_week的默认template_name_suffix。
+class ArticleWeekArchiveView(WeekArchiveView):
+    queryset = Article.objects.all()
+    date_field = 'create_at'
+    allow_future = True
+    week_format = '%W'
+    template_name = 'base_view/article_archive_week.html'
+
+#显示指定日期内所有对象的日期归档页面。除非您将allow_future设置为True，否则以后的日期都会抛出404错误，而不管以后是否存在任何对象。
+#
+#
+# 上下文
+#
+# 除了MultipleObjectMixin（通过BaseDateListView）提供的上下文，模板的上下文将是：
+#
+# day：代表给定日期的date对象。
+# next_day：根据allow_empty和allow_future，表示第二天的date对象。
+# previous_day：表示前一天的date对象，根据allow_empty和allow_future。
+# next_month：根据allow_empty和allow_future，表示下个月第一天的date对象。
+# previous_month：根据allow_empty和allow_future，表示上个月第一天的date对象。
+# 备注
+#
+# 使用_archive_day的默认template_name_suffix。
+
+#http://127.0.0.1:8000/base_view/archive_day/2017/jul/04/
+class ArticleDayArchiveView(DayArchiveView):
+    queryset = Article.objects.all()
+    date_field = 'create_at'
+    allow_future = True
+    template_name = 'base_view/article_archive_day.html'
 
 
 

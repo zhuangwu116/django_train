@@ -20,4 +20,11 @@ urlpatterns=[
     url(r'^archive_index/$', ArchiveIndexView.as_view(model=Article,date_field="create_at",template_name='base_view/article_archive.html'),
         name='archive_index'),
 
+    url(r'^archive_year/(?P<year>[0-9]{4})/$',views.ArticleYearArchiveView.as_view(),name='archive_year'),
+
+    url(r'^archive_month/(?P<year>[0-9]{4})/(?P<month>[0-9]+)/$',views.ArticleMonthArchiveView.as_view(month_format='%m'),name='archive_month'),
+    url(r'^archive_week/(?P<year>[0-9]{4})/(?P<week>[0-9]+)/$',
+        views.ArticleWeekArchiveView.as_view(), name='archive_week'),
+    url(r'^archive_day/(?P<year>[0-9]{4})/(?P<month>[-\w]+)/(?P<day>[0-9]+)/$',
+        views.ArticleDayArchiveView.as_view(), name='archive_day'),
 ]
