@@ -35,5 +35,6 @@ urlpatterns=[
         DateDetailView.as_view(template_name='base_view/article_detail.html',model=Article, date_field="pub_date"),
         name="archive_date_detail"),
 
-url(r'^index_login$',views.ProtectedView.as_view(),name='index_login'),
+    url(r'^index_login$',views.ProtectedView.as_view(),name='index_login'),
+    url(r'^author/add/$', views.AJAXAuthorCreate.as_view(), name='author-add'),
 ]
