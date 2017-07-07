@@ -12,6 +12,8 @@ from django.views.generic.edit import FormView,CreateView,UpdateView,DeleteView
 from django.views.generic.dates import YearArchiveView,MonthArchiveView,WeekArchiveView,\
     DayArchiveView,TodayArchiveView,DateDetailView
 
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 from base_view.models import *
 from base_view.forms import *
@@ -194,3 +196,11 @@ class ArticleDayArchiveView(DayArchiveView):
     date_field = 'create_at'
     allow_future = True
     template_name = 'base_view/article_archive_day.html'
+
+
+
+class ProtectedView(TemplateView):
+    template_name = 'base_view/index.html'
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(ProtectedView,self).dispatch(request,*args,**kwargs)
