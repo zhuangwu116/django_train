@@ -32,4 +32,6 @@ urlpatterns=[
     url(r'^archive_date_detail/(?P<year>[0-9]{4})/(?P<month>[-\w]+)/(?P<day>[0-9]+)/(?P<pk>[0-9]+)/$',
         DateDetailView.as_view(template_name='base_view/article_detail.html',model=Article, date_field="pub_date"),
         name="archive_date_detail"),
+
+url(r'^index_login$',views.ProtectedView.as_view(),name='index_login'),
 ]

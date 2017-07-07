@@ -201,6 +201,6 @@ class ArticleDayArchiveView(DayArchiveView):
 
 class ProtectedView(TemplateView):
     template_name = 'base_view/index.html'
-    @method_decorator(login_required)
+    @method_decorator(login_required(login_url='/admin/login/'))
     def dispatch(self, request, *args, **kwargs):
         return super(ProtectedView,self).dispatch(request,*args,**kwargs)
