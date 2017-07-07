@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'djangtestdemo.apps.DjangtestdemoConfig',
     'vsdemo.apps.VsdemoConfig',
     'base_view.apps.BaseViewConfig',
+    'generic.apps.GenericConfig',
 ]
 
 MIDDLEWARE = [
@@ -62,6 +63,7 @@ TEMPLATES = [
         'DIRS': [os.path.join(os.path.join(BASE_DIR,'djangtestdemo'),'templates'),
                  os.path.join(os.path.join(BASE_DIR,'vsdemo'),'templates'),
                  os.path.join(os.path.join(BASE_DIR, 'base_view'), 'templates'),
+                 os.path.join(os.path.join(BASE_DIR, 'generic'), 'templates'),
                  ]
         ,
         'APP_DIRS': True,
