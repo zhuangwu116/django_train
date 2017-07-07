@@ -264,6 +264,9 @@ class AuthorCreate(CreateView):
 
 
 
+from generic.views import AjaxableResponseMixin
 
-
+class AJAXAuthorCreate(AjaxableResponseMixin,CreateView):
+    model = Author
+    fields = ['name']
 

@@ -49,5 +49,7 @@ class Book(models.Model):
     authors = models.ManyToManyField('Author')
     publisher = models.ForeignKey(Publisher, on_delete=models.CASCADE)
     publication_date = models.DateField()
+    def __str__(self):              # __unicode__ on Python 2
+        return self.title
     def __unicode__(self):
         return self.title
