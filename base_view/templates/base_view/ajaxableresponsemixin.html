@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="{% static 'vsdemo/scripts/jquery-1.10.2.min.js' %}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = jQuery.trim(cookies[i]);
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+            var csrftoken = getCookie('csrftoken');
+            function csrfSafeMethod(method) {
+                // these HTTP methods do not require CSRF protection
+                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+            }
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                }
+            });
+            $('#ajax_btn').click(function () {
+                var title=$('#id_title').val();
+                var context=$('#id_context').val();
+                var create_at=$('#id_create_at').val();
+                $.ajax({
+                    type:"POST",
+                    url:'/base_view/author/add/',
+                    data:{
+                        'title':title,
+                        'context':context,
+                        'create_at':create_at
+                    },
+                    dataType:'json',
+                    success:function (data) {
+                        alert(data.pk)
+                }
+            });
+            });
+        });
+    </script>
+</head>
+<body>
+<form action="" method="post">{% csrf_token %}
+    {{ form.as_p}}
+</form>
+<button id="ajax_btn">提交</button>
+</body>
+</html>

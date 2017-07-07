@@ -12,6 +12,8 @@ urlpatterns=[
     url(r'^(?P<pk>[0-9]+)/$',views.ArticleDetailView.as_view(),name='article-detail'),
     url(r'^article_list$',views.ArticleListView.as_view(),name='article-list'),
 
+    url(r'^article_list_filter/([\w-]+)/$',views.ArticleListfilter.as_view(),name='article_list_filter'),
+
     url(r'^thanks/$', views.thanks, name='thanks'),
 
     url(r'^formview/$', views.ArticleFormView.as_view(), name='formview'),
@@ -32,4 +34,7 @@ urlpatterns=[
     url(r'^archive_date_detail/(?P<year>[0-9]{4})/(?P<month>[-\w]+)/(?P<day>[0-9]+)/(?P<pk>[0-9]+)/$',
         DateDetailView.as_view(template_name='base_view/article_detail.html',model=Article, date_field="pub_date"),
         name="archive_date_detail"),
+
+    url(r'^index_login$',views.ProtectedView.as_view(),name='index_login'),
+    url(r'^author/add/$', views.AJAXAuthorCreate.as_view(), name='author-add'),
 ]

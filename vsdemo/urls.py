@@ -1,7 +1,6 @@
 import vsdemo.views
 from django.conf.urls import url
 from vsdemo.models import Poll
-from django.views.generic import RedirectView
 import vsdemo.views
 urlpatterns=[
     url(r'^$',

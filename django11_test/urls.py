@@ -17,7 +17,7 @@ from django.conf.urls import url,include
 from django.contrib import admin
 from datetime import datetime
 import django.contrib.auth.views
-import vsdemo.views
+import vsdemo.forms
 admin.autodiscover()
 urlpatterns = [
     url(r'^',include('vsdemo.urls',namespace='vsdemo')),

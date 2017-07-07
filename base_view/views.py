@@ -12,6 +12,8 @@ from django.views.generic.edit import FormView,CreateView,UpdateView,DeleteView
 from django.views.generic.dates import YearArchiveView,MonthArchiveView,WeekArchiveView,\
     DayArchiveView,TodayArchiveView,DateDetailView
 
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 from base_view.models import *
 from base_view.forms import *
@@ -49,12 +51,33 @@ class ArticleCounterRedirectView(RedirectView):
         return super(ArticleCounterRedirectView, self).get_redirect_url(*args, **kwargs)
 
 class ArticleDetailView(DetailView):
+    # 指定model = Article等价于快速声明的queryset = Article.objects.all()。
     model = Article
     template_name = 'base_view/article_detail.html'
     def get_context_data(self, **kwargs):
         context = super(ArticleDetailView,self).get_context_data(**kwargs)
         context['now']=timezone.now()
         return context
+#以上面等价
+class ArticleDetail(DetailView):
+    # 指定model = Article等价于快速声明的queryset = Article.objects.all()。
+    queryset = Article.objects.all()
+    template_name = 'base_view/article_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ArticleDetailView, self).get_context_data(**kwargs)
+        context['now'] = timezone.now()
+        return context
+
+class ArticleDetail_get_obj(DetailView):
+    # 指定model = Article等价于快速声明的queryset = Article.objects.all()。
+    queryset = Article.objects.all()
+    template_name = 'base_view/article_detail.html'
+    def get_object(self):
+        object=super(ArticleDetail_get_obj,self).get_object()
+        object.create_at=timezone.now()
+        object.save()
+        return object
 
 #http://127.0.0.1:8000/base_view/article_list?page=2
 class ArticleListView(ListView):
@@ -67,6 +90,30 @@ class ArticleListView(ListView):
     def get_context_data(self, **kwargs):
         context=super(ArticleListView,self).get_context_data(**kwargs)
         return context
+
+# http://127.0.0.1:8000/base_view/article_list?page=2
+class ArticleList(ListView):
+    # 指定model = Article等价于快速声明的queryset = Article.objects.all()。
+    queryset = Article.objects.order_by('-id')
+    paginate_by = 3
+    allow_empty = True
+    context_object_name = 'article_objs'
+    template_name = 'base_view/article_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ArticleListView, self).get_context_data(**kwargs)
+        return context
+#动态过滤
+class ArticleListfilter(ListView):
+    template_name = 'base_view/article_list.html'
+    def get_queryset(self):
+        self.title=get_object_or_404(Article,self.args[0])
+        return Article.objects.filter(title__contains=self.title)
+    def get_context_data(self, **kwargs):
+        context=super(ArticleListfilter,self).get_context_data(**kwargs)
+        context['title']=self.title
+        return context
+
 #显示表单的视图。发送错误时，重新显示表单和验证的错误；成功时，重定向到一个新的URL。
 class ArticleFormView(FormView):
 
@@ -105,6 +152,7 @@ class ArticleUpdateView(UpdateView):
 
 class ArticleDeleteView(DeleteView):
     model = Article
+    #这里我们必须使用reverse_lazy() 而不是reverse，因为在该文件导入时URL 还没有加载。
     success_url = reverse_lazy('base_view:article-list')
     template_name = 'base_view/article_delete.html'
 
@@ -194,3 +242,32 @@ class ArticleDayArchiveView(DayArchiveView):
     date_field = 'create_at'
     allow_future = True
     template_name = 'base_view/article_archive_day.html'
+
+
+# @method_decorator(never_cache, name='dispatch')
+# @method_decorator(login_required, name='dispatch')
+class ProtectedView(TemplateView):
+    template_name = 'base_view/index.html'
+    @method_decorator(login_required(login_url='/admin/login/'))
+    def dispatch(self, request, *args, **kwargs):
+        return super(ProtectedView,self).dispatch(request,*args,**kwargs)
+
+#在这个视图中，请确保你没有将created_by 包含进要编辑的字段列表，并覆盖form_valid() 来添加这个用户：
+class AuthorCreate(CreateView):
+    model = Author
+    fields = ['name']
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        return super(AuthorCreate, self).form_valid(form)
+
+
+
+
+from generic.views import AjaxableResponseMixin
+
+class AJAXAuthorCreate(AjaxableResponseMixin,CreateView):
+    model = Article
+    fields = ['title', 'context', 'create_at']
+    template_name = 'base_view/ajaxableresponsemixin.html'
+
