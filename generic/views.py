@@ -21,6 +21,7 @@ class AjaxableResponseMixin(object):
             return response
     def form_valid(self,form):
         self.object=form.save()
+        print dir(super(AjaxableResponseMixin,self))
         response = super(AjaxableResponseMixin,self).form_invalid(form)
         if self.request.is_ajax():
             data={
