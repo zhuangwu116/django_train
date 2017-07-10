@@ -302,9 +302,9 @@ class PublisherDetail(SingleObjectMixin,ListView):
     template_name = 'books/publisher_list.html'
     #注意我们 在 get()方法里设置了self.object ，这样我们就可以在后面的 get_context_data()
     #和get_queryset()方法里再次用到它. 如果不设置 template_name, 那模板会指向默认的
-    # ListView 所选择的模板, 也就是 "books/book_list.html"，因为这个模板是书目的一个列表;
-    #  但ListView 对于该类继承了 SingleObjectMixin这个类是一无所知的,
-    # 所以不会对使用Publisher来查看视图有任何反应.
+    #ListView 所选择的模板, 也就是 "books/book_list.html"，因为这个模板是书目的一个列表;
+    #但ListView 对于该类继承了 SingleObjectMixin这个类是一无所知的,
+    #所以不会对使用Publisher来查看视图有任何反应.
     def get(self,request,*args,**kwargs):
         self.object = self.get_object(queryset=Publisher.objects.all())
         return super(PublisherDetail, self).get(request,*args,**kwargs)
