@@ -2,10 +2,10 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render,get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse,HttpResponseRedirect,HttpResponseForbidden
 from django.urls import reverse_lazy
 from django.views.generic import View,TemplateView
-from django.views.generic.detail import DetailView
+from django.views.generic.detail import DetailView,SingleObjectMixin
 from django.views.generic.base import RedirectView
 from django.views.generic.list import ListView
 from django.views.generic.edit import FormView,CreateView,UpdateView,DeleteView
@@ -271,3 +271,14 @@ class AJAXAuthorCreate(AjaxableResponseMixin,CreateView):
     fields = ['title', 'context', 'create_at']
     template_name = 'base_view/ajaxableresponsemixin.html'
 
+#SingleObjectMixin 与View 一起使用
+
+#如果你想编写一个简单的基于类的视图，它只响应POST，我们将子类化View 并在子类中只编写一个post()
+# 方法。但是，如果我们想处理一个由URL 标识的特定对象，我们将需要SingleObjectMixin 提供的功能。
+class RecordInterest(SingleObjectMixin,View):
+    model = Article
+    def post(self,request,*args,**kwargs):
+        if not request.user.is_authenticated():
+            return HttpResponseForbidden()
+        self.object=self.get_object()
+        return HttpResponseRedirect(reverse('base_view:article-detail',kwargs={'pk':self.object.pk}))
