@@ -282,3 +282,35 @@ class RecordInterest(SingleObjectMixin,View):
             return HttpResponseForbidden()
         self.object=self.get_object()
         return HttpResponseRedirect(reverse('base_view:article-detail',kwargs={'pk':self.object.pk}))
+
+#SingleObjectMixin 与ListView 一起使用
+
+# ListView提供内建的分页，但是可能你分页的列表中每个对象都与另外一个对象（通过一个外键）关联。在我们的Publishing
+# 例子中，你可能想通过一个特定的Publisher
+# 分页所有的Book。
+#
+# 一种方法是组合ListView
+# 和SingleObjectMixin，这样分页的Book
+# 列表的查询集能够与找到的单个Publisher
+# 对象关联。为了实现这点，我们需要两个不同的查询集：get_queryset() get_object()
+
+# 我们必须仔细考虑get_context_data()。因为SingleObjectMixin和ListView都会将Context数据
+# 的context_object_name下，我们必须显式确保Publisher位于Context数据中。ListView将为我们
+# 添加合适的page_obj和paginator ，只要我们记住调用super()。
+class PublisherDetail(SingleObjectMixin,ListView):
+    paginate_by = 2
+    template_name = 'books/publisher_list.html'
+    #注意我们 在 get()方法里设置了self.object ，这样我们就可以在后面的 get_context_data()
+    #和get_queryset()方法里再次用到它. 如果不设置 template_name, 那模板会指向默认的
+    # ListView 所选择的模板, 也就是 "books/book_list.html"，因为这个模板是书目的一个列表;
+    #  但ListView 对于该类继承了 SingleObjectMixin这个类是一无所知的,
+    # 所以不会对使用Publisher来查看视图有任何反应.
+    def get(self,request,*args,**kwargs):
+        self.object = self.get_object(queryset=Publisher.objects.all())
+        return super(PublisherDetail, self).get(request,*args,**kwargs)
+    def get_context_data(self, **kwargs):
+        context=super(PublisherDetail,self).get_context_data(**kwargs)
+        context['publisher']=self.object
+        return context
+    def get_queryset(self):
+        return self.object.book_set.all()
