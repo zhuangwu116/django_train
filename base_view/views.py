@@ -5,16 +5,16 @@ from django.shortcuts import render,get_object_or_404
 from django.http import HttpResponse,HttpResponseRedirect,HttpResponseForbidden
 from django.urls import reverse_lazy
 from django.views.generic import View,TemplateView
-from django.views.generic.detail import DetailView,SingleObjectMixin
+from django.views.generic.detail import DetailView,SingleObjectMixin,BaseDetailView,SingleObjectTemplateResponseMixin
 from django.views.generic.base import RedirectView
 from django.views.generic.list import ListView
-from django.views.generic.edit import FormView,CreateView,UpdateView,DeleteView
+from django.views.generic.edit import FormView,CreateView,UpdateView,DeleteView,FormMixin
 from django.views.generic.dates import YearArchiveView,MonthArchiveView,WeekArchiveView,\
     DayArchiveView,TodayArchiveView,DateDetailView
 
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-
+from django.core.urlresolvers import reverse
 from base_view.models import *
 from base_view.forms import *
 
@@ -314,3 +314,87 @@ class PublisherDetail(SingleObjectMixin,ListView):
         return context
     def get_queryset(self):
         return self.object.book_set.all()
+##########################################################################################################
+#使用 FormMixin 与 DetailView
+# 想想我们之前合用 View 和SingleObjectMixin 的例子. 我们想要记录用户对哪些作者感兴趣; 也就是说我们想让用户发表说为什么喜欢这些作者的信息。同样的，我们假设这些数据并没有存放在关系数据库里，而是存在另外一个奥妙之地（其实这里不用关心具体存放到了哪里）。
+#
+# 要实现这一点，自然而然就要设计一个 Form，让用户把相关信息通过浏览器发送到Django后台。 另外，我们要巧用REST方法,这样我们就可以用相同的URL来显示作者和捕捉来自用户的消息了。 让我们重写 AuthorDetailView 来实现它。
+#
+# 我们将保持DetailView的GET处理，虽然我们必须在上下文数据中添加一个Form，以便我们可以渲染它模板。我们还想从FormMixin中提取表单处理，并写一些代码，以便在POST上适当地调用表单。
+#
+# 注意
+#
+# 我们使用FormMixin并实现post()，而不是尝试将DetailView与FormView 结合(FormView已经提供了post()），因为这两个视图都实现了get()，事情会变得更加混乱。
+#
+# 我们的新AuthorDetail看起来像这样：
+class AuthorDetail(FormMixin,DetailView):
+    model = Author
+    form_class = AuthorInterestForm
+    # 只是提供重定向的地方，它在form_valid()的默认实现中使用。如上所述，我们必须提供我们自己的post()，
+    # 并覆盖get_context_data()，以使表单在上下文数据中可用。
+    def get_success_url(self):
+        return reverse('author-detail',kwargs={'pk':self.object.pk})
+    def get_context_data(self, **kwargs):
+        context=super(AuthorDetail,self).get_context_data(**kwargs)
+        context['form']=self.get_form()
+        return context
+    def post(self,request,*args,**kwargs):
+        if not request.user.is_authenticated():
+            return HttpResponseForbidden()
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        return super(AuthorDetail,self).form_valid(form)
+
+class AuthorDisplay(DetailView):
+    model = Author
+    def get_context_data(self, **kwargs):
+        context = super(AuthorDisplay,self).get_context_data(**kwargs)
+        context['form']=AuthorInterestForm()
+        return context
+
+class AuthorInterest(SingleObjectMixin,FormView):
+    template_name = 'books/author_detail.html'
+    form_class = AuthorInterestForm
+    model = Author
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated():
+            return HttpResponseForbidden()
+        self.object=self.get_object()
+        return super(AuthorInterest,self).post(request,*args,**kwargs)
+    def get_success_url(self):
+        return reverse('author-detail',kwargs={'pk':self.object.pk})
+#最后，我们将这个在一个新的AuthorDetail视图中。我们已经知道，在基于类的视图上调用as_view()会让我们看起来像一个基于函数的视图，所以我们可以在两个子视图之间选择。
+#您当然可以以与在URLconf中相同的方式将关键字参数传递给as_view()，例如，如果您希望AuthorInterest行为也出现在另一个网址但使用不同的模板：
+class AuthorDetailView(View):
+    def get(self,request,*args,**kwargs):
+        view=AuthorDisplay.as_view()
+        return view(request,*args,**kwargs)
+    def post(self,request,*args,**kwargs):
+        view = AuthorInterest.as_view()
+        return view(request,*args,**kwargs)
+#################################################################################
+from generic.views import JSONResponseMixin
+class JSONView(JSONResponseMixin,TemplateView):
+    def render_to_response(self,context,**response_kwargs):
+        return self.render_to_json_response(context,**response_kwargs)
+
+class JSONDetailView(JSONResponseMixin,BaseDetailView):
+    def render_to_response(self,context,**response_kwargs):
+        return self.render_to_json_response(context,**response_kwargs)
+#如果你想更进一步，你可以组合DetailView 的子类，它根据HTTP 请求的某个属性既能够返回HTML 又能够返回JSON 内容，
+# 例如查询参数或HTTP 头部。这只需将JSONResponseMixin 和SingleObjectTemplateResponseMixin 组合，
+# 并覆盖render_to_response() 的实现以根据用户请求的响应类型进行正确的渲染：
+class HybridDetailView(JSONResponseMixin,SingleObjectTemplateResponseMixin,BaseDetailView):
+    def render_to_response(self, context, **response_kwargs):
+        if self.request.GET.get('format')=='json':
+            return self.render_to_json_response(context,**response_kwargs)
+        else:
+            return super(HybridDetailView,self).render_to_response(context)
+
+
