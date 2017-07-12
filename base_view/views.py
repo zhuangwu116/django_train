@@ -17,11 +17,19 @@ from django.utils.decorators import method_decorator
 from django.core.urlresolvers import reverse
 from base_view.models import *
 from base_view.forms import *
-
+import csv
 def thanks(request):
     return HttpResponse('success')
 
-
+#Python自带了CSV库，csv。在Django中使用它的关键是，csv模块的CSV创建功能作用于类似于文件
+# 的对象，并且Django的HttpResponse对象就是类似于文件的对象
+def some_view(request):
+    response=HttpResponse(content_type='test/csv')
+    response['Content-Disposition']='attachment;filename="somefilename.csv"'
+    writer=csv.writer(response)
+    writer.writerow(['First row','Foo','Bar','Baz'])
+    writer.writerow(['Second row','A','B','C','"Testing"',"Here's a quote"])
+    return response
 class MyView(View):
     http_method_names = ['post','get']
     def dispatch(self, request, *args, **kwargs):
