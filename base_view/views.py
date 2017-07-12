@@ -15,6 +15,7 @@ from django.views.generic.dates import YearArchiveView,MonthArchiveView,WeekArch
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.core.urlresolvers import reverse
+
 from base_view.models import *
 from base_view.forms import *
 import csv
@@ -30,6 +31,9 @@ def some_view(request):
     writer.writerow(['First row','Foo','Bar','Baz'])
     writer.writerow(['Second row','A','B','C','"Testing"',"Here's a quote"])
     return response
+from django.utils.six.moves import range
+from django.http import StreamingHttpResponse
+#流式传输大尺寸CSV文件
 class MyView(View):
     http_method_names = ['post','get']
     def dispatch(self, request, *args, **kwargs):
