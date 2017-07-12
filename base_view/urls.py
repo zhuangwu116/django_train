@@ -37,4 +37,6 @@ urlpatterns=[
     url(r'^article/(?P<pk>[0-9]+)/interest/$', views.RecordInterest.as_view(), name='article-interest'),
     url(r'^index_login$',views.ProtectedView.as_view(),name='index_login'),
     url(r'^author/add/$', views.AJAXAuthorCreate.as_view(), name='author-add'),
+
+    url(r'^csv/$', views.some_view, name='csv'),
 ]
