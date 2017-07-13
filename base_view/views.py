@@ -26,7 +26,7 @@ def thanks(request):
 # 的对象，并且Django的HttpResponse对象就是类似于文件的对象
 def some_view(request):
     response=HttpResponse(content_type='test/csv')
-    response['Content-Disposition']='attachment;filename="somefilename.csv"'
+    response['Content-Disposition']='attachment; filename="somefilename.csv"'
     writer=csv.writer(response)
     writer.writerow(['First row','Foo','Bar','Baz'])
     writer.writerow(['Second row','A','B','C','"Testing"',"Here's a quote"])
@@ -34,6 +34,76 @@ def some_view(request):
 from django.utils.six.moves import range
 from django.http import StreamingHttpResponse
 #流式传输大尺寸CSV文件
+# 当处理生成大尺寸响应的视图时，你可能想要使用Django的StreamingHttpResponse类。
+# 例如，通过流式传输需要长时间来生成的文件，可以避免负载均衡器在服务器生成响应的时候断掉连接。
+#
+# 在这个例子中，我们利用Python的生成器来有效处理大尺寸CSV文件的拼接和传输：
+class Echo(object):
+    def write(self,value):
+        return value
+def some_streaming_csv_view(request):
+    rows=(["Row {}".format(idx),str(idx)] for idx in range(65536))
+    pseudo_buffer=Echo()
+    writer=csv.writer(pseudo_buffer)
+    response=StreamingHttpResponse((writer.writerow(row) for row in rows),content_type="text/csv")
+    response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
+    return response
+#使用模板系统
+# 或者，你可以使用Django模板系统来生成CSV。比起便捷的Python csv模板来说，这样比较低级，
+# 但是为了完整性，这个解决方案还是在这里展示一下。
+#
+# 它的想法是，传递一个项目的列表给你的模板，并且让模板在for循环中输出逗号。
+#
+# 这里是一个例子，它像上面一样生成相同的CSV文件：
+from django.template.loader import get_template
+def some_templates_view(request):
+    csv_data = (
+        ('First row', 'Foo', 'Bar', 'Baz'),
+        ('Second row', 'A', 'B', 'C', '"Testing"', "Here's a quote"),
+    )
+
+    t = get_template('csv/my_template_name.txt')
+    context=dict()
+    context['data']=csv_data
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
+    response.write(t.render(context))
+    return response
+
+from reportlab.pdfgen import canvas
+import uuid
+
+def some_pdf_view(request):
+    response=HttpResponse(content_type='application/pdf')
+    response['Content-Disposition']='attachment; filename="%s.pdf"' % uuid.uuid1()
+    p=canvas.Canvas(response)
+    p.drawString(100,100,"Hello world.")
+    p.showPage()
+    p.save()
+    return response
+from io import BytesIO
+from reportlab.pdfgen import canvas
+
+def some_pdf_complex_view(request):
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="%s.pdf"' % uuid.uuid1()
+    buffer = BytesIO()
+    p = canvas.Canvas(buffer)
+    p.drawString(100,100,"Hello world.")
+    p.showPage()
+    p.save()
+    pdf = buffer.getvalue()
+    buffer.close()
+    response.write(pdf)
+    return response
+
+
+
+
+
+
+
+
 class MyView(View):
     http_method_names = ['post','get']
     def dispatch(self, request, *args, **kwargs):
@@ -42,8 +112,6 @@ class MyView(View):
         pk=kwargs.pop('pk')
         print 'myview',pk
         return render(request,'base_view/index.html',{})
-
-
 class HomePageView(TemplateView):
     template_name = 'base_view/home.html'
 
