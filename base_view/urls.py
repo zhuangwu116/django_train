@@ -41,4 +41,5 @@ urlpatterns=[
     url(r'^csv/$', views.some_view, name='csv'),
     url(r'^some_streaming_csv_view/$',views.some_streaming_csv_view,name='streaming_csv'),
     url(r'^some_templates_view/$', views.some_templates_view, name='some_templates_view'),
+    url(r'^some_pdf_view/$', views.some_pdf_view, name='some_pdf_view'),
 ]

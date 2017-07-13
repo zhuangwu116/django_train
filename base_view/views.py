@@ -70,6 +70,23 @@ def some_templates_view(request):
     response.write(t.render(context))
     return response
 
+from reportlab.pdfgen import canvas
+import uuid
+
+def some_pdf_view(request):
+    response=HttpResponse(content_type='application/pdf')
+    response['Content-Disposition']='attachment; filename="%s.pdf"' % uuid.uuid1()
+    p=canvas.Canvas(response)
+    p.drawString(100,100,"Hello world.")
+    p.showPage()
+    p.save()
+    return response
+
+
+
+
+
+
 
 
 
