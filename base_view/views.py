@@ -55,20 +55,22 @@ def some_streaming_csv_view(request):
 # 它的想法是，传递一个项目的列表给你的模板，并且让模板在for循环中输出逗号。
 #
 # 这里是一个例子，它像上面一样生成相同的CSV文件：
-from django.template import loader,Context
+from django.template import Template,Context
 def some_templates_view(request):
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition']='attachment; filename="somefile_1.csv"'
-    csv_data=(
-        ('First row','Foo','Bar','Baz'),
-        ('Second row','A','B','C','"Testing"',"Here's a quote")
+    csv_data = (
+        ('First row', 'Foo', 'Bar', 'Baz'),
+        ('Second row', 'A', 'B', 'C', '"Testing"', "Here's a quote"),
     )
-    t = loader.get_template('csv/my_template_name.txt')
+
+    t = Template('csv/my_template_name.txt')
     c = Context({
-        'data':csv_data,
+        'data': csv_data,
     })
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
     response.write(t.render(c))
     return response
+
 
 
 
