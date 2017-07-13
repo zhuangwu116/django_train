@@ -39,4 +39,6 @@ urlpatterns=[
     url(r'^author/add/$', views.AJAXAuthorCreate.as_view(), name='author-add'),
 
     url(r'^csv/$', views.some_view, name='csv'),
+    url(r'^some_streaming_csv_view/$',views.some_streaming_csv_view,name='streaming_csv'),
+    url(r'^some_templates_view/$', views.some_templates_view, name='some_templates_view'),
 ]

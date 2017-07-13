@@ -57,6 +57,29 @@ class MyView(View):
         pk=kwargs.pop('pk')
         print 'myview',pk
         return render(request,'base_view/index.html',{})
+#使用模板系统
+# 或者，你可以使用Django模板系统来生成CSV。比起便捷的Python csv模板来说，这样比较低级，
+# 但是为了完整性，这个解决方案还是在这里展示一下。
+#
+# 它的想法是，传递一个项目的列表给你的模板，并且让模板在for循环中输出逗号。
+#
+# 这里是一个例子，它像上面一样生成相同的CSV文件：
+from django.template import loader,Context
+def some_templates_view(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition']='attachment; filename="somefile_1.csv"'
+    csv_data=(
+        ('First row','Foo','Bar','Baz'),
+        ('Second row','A','B','C','"Testing"',"Here's a quote")
+    )
+    t = loader.get_template('csv/my_template_name.txt')
+    c = Context({
+        'data':csv_data,
+    })
+    response.write(t.render(c))
+    return response
+
+
 
 
 class HomePageView(TemplateView):
