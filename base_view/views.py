@@ -26,7 +26,7 @@ def thanks(request):
 # 的对象，并且Django的HttpResponse对象就是类似于文件的对象
 def some_view(request):
     response=HttpResponse(content_type='test/csv')
-    response['Content-Disposition']='attachment;filename="somefilename.csv"'
+    response['Content-Disposition']='attachment; filename="somefilename.csv"'
     writer=csv.writer(response)
     writer.writerow(['First row','Foo','Bar','Baz'])
     writer.writerow(['Second row','A','B','C','"Testing"',"Here's a quote"])
@@ -34,6 +34,21 @@ def some_view(request):
 from django.utils.six.moves import range
 from django.http import StreamingHttpResponse
 #流式传输大尺寸CSV文件
+# 当处理生成大尺寸响应的视图时，你可能想要使用Django的StreamingHttpResponse类。
+# 例如，通过流式传输需要长时间来生成的文件，可以避免负载均衡器在服务器生成响应的时候断掉连接。
+#
+# 在这个例子中，我们利用Python的生成器来有效处理大尺寸CSV文件的拼接和传输：
+class Echo(object):
+    def write(self,value):
+        return value
+def some_streaming_csv_view(request):
+    rows=(["Row {}".format(idx),str(idx)] for idx in range(65536))
+    pseudo_buffer=Echo()
+    writer=csv.writer(pseudo_buffer)
+    response=StreamingHttpResponse((writer.writerow(row) for row in rows),content_type="text/csv")
+    response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
+    return response
+
 class MyView(View):
     http_method_names = ['post','get']
     def dispatch(self, request, *args, **kwargs):
