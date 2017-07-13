@@ -81,7 +81,21 @@ def some_pdf_view(request):
     p.showPage()
     p.save()
     return response
+from io import BytesIO
+from reportlab.pdfgen import canvas
 
+def some_pdf_complex_view(request):
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="%s.pdf"' % uuid.uuid1()
+    buffer = BytesIO()
+    p = canvas.Canvas(buffer)
+    p.drawString(100,100,"Hello world.")
+    p.showPage()
+    p.save()
+    pdf = buffer.getvalue()
+    buffer.close()
+    response.write(pdf)
+    return response
 
 
 
