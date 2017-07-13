@@ -48,15 +48,6 @@ def some_streaming_csv_view(request):
     response=StreamingHttpResponse((writer.writerow(row) for row in rows),content_type="text/csv")
     response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
     return response
-
-class MyView(View):
-    http_method_names = ['post','get']
-    def dispatch(self, request, *args, **kwargs):
-      return super(MyView,self).dispatch(request,*args,**kwargs)
-    def get(self,request,*args,**kwargs):
-        pk=kwargs.pop('pk')
-        print 'myview',pk
-        return render(request,'base_view/index.html',{})
 #使用模板系统
 # 或者，你可以使用Django模板系统来生成CSV。比起便捷的Python csv模板来说，这样比较低级，
 # 但是为了完整性，这个解决方案还是在这里展示一下。
@@ -81,7 +72,14 @@ def some_templates_view(request):
 
 
 
-
+class MyView(View):
+    http_method_names = ['post','get']
+    def dispatch(self, request, *args, **kwargs):
+      return super(MyView,self).dispatch(request,*args,**kwargs)
+    def get(self,request,*args,**kwargs):
+        pk=kwargs.pop('pk')
+        print 'myview',pk
+        return render(request,'base_view/index.html',{})
 class HomePageView(TemplateView):
     template_name = 'base_view/home.html'
 
