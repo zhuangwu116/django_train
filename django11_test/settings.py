@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'vsdemo.apps.VsdemoConfig',
     'base_view.apps.BaseViewConfig',
     'generic.apps.GenericConfig',
+    'middleware.apps.MiddlewareConfig',
+    'upload.apps.UploadConfig',
 ]
 
 MIDDLEWARE = [
