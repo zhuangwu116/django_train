@@ -67,7 +67,7 @@ def some_templates_view(request):
     context['data']=csv_data
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
-    response.write(t.render(context,request))
+    response.write(t.render(context))
     return response
 
 
