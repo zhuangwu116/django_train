@@ -40,5 +40,7 @@ urlpatterns = [
     url(r'^testdemo/', include('djangtestdemo.urls')),
 
     url(r'^base_view/',include('base_view.urls',namespace='base_view')),
+
+    url(r'^upload/', include('upload.urls', namespace='upload')),
     url(r'^admin/', admin.site.urls),
 ]
