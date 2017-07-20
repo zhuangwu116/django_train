@@ -42,5 +42,9 @@ urlpatterns = [
     url(r'^base_view/',include('base_view.urls',namespace='base_view')),
 
     url(r'^upload/', include('upload.urls', namespace='upload')),
+
+    url(r'^framework/',include('framework.urls',namespace='framework')),
+
     url(r'^admin/', admin.site.urls),
+
 ]
