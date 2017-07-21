@@ -145,7 +145,7 @@ class Uploader(object):
         _format = _format.replace("{mm}", _t.strftime("%m"))
         _format = _format.replace("{dd}", _t.strftime("%d"))
         _format = _format.replace("{hh}", _t.strftime("%H"))
-        _format = _format.replace("{ii}", _t.strftime("%i"))
+        _format = _format.replace("{ii}", _t.strftime("%M"))
         _format = _format.replace("{ss}", _t.strftime("%S"))
         _format = _format.replace("{time}", _t.strftime("%f"))
     def __getFilePath(self):
