@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'generic.apps.GenericConfig',
     'middleware.apps.MiddlewareConfig',
     'upload.apps.UploadConfig',
+    'framework.apps.FrameworkConfig',
 ]
 
 MIDDLEWARE = [
@@ -66,6 +67,7 @@ TEMPLATES = [
                  os.path.join(os.path.join(BASE_DIR,'vsdemo'),'templates'),
                  os.path.join(os.path.join(BASE_DIR, 'base_view'), 'templates'),
                  os.path.join(os.path.join(BASE_DIR, 'generic'), 'templates'),
+                 os.path.join(os.path.join(BASE_DIR,'framework'),'templates'),
                  ]
         ,
         'APP_DIRS': True,
