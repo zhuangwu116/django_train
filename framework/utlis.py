@@ -3,14 +3,17 @@ from __future__ import unicode_literals
 import os
 import base64
 from datetime import datetime
+import random
+
 def handle_uploaded_file(f,path):
     with open(path,'wb+') as destination:
         for chunk in f.chunks():
             destination.write(chunk)
 
 class Uploader(object):
-    def __init__(self,request,fileField,config,type="upload"):
+    def __init__(self,request,fileField,config,rootPath,type="upload"):
         self.__request=request
+        self.__rootPath = rootPath
         self.__fileField = fileField
         self.__file = None
         self.__base64 = None
@@ -116,7 +119,7 @@ class Uploader(object):
             except OSError as exc:
                 self.__stateInfo = self.__getStateInfo("ERROR_SIZE_EXCEED")
                 return
-        if not os.path.exists(self.__filePath):
+        if not os.path.exists(_dirname):
             self.__stateInfo = self.__getStateInfo("ERROR_FILE_MOVE")
             return
         try:
@@ -134,7 +137,7 @@ class Uploader(object):
 
 
     def __getFileExt(self):
-        return os.path.splitext(self.__oriName)
+        return str(os.path.splitext(self.__oriName)[-1])
 
 
     def __getFullName(self):
@@ -148,14 +151,23 @@ class Uploader(object):
         _format = _format.replace("{ii}", _t.strftime("%M"))
         _format = _format.replace("{ss}", _t.strftime("%S"))
         _format = _format.replace("{time}", _t.strftime("%f"))
+        randNum = random.randint(1,1000000)
+        _format = _format.replace("{rand:6}",str(randNum))
+        ext = self.__getFileExt()
+        return _format+ext
     def __getFilePath(self):
-        pass
+        fullname = self.__fullName
+        rootPath = self.__rootPath
+        if not fullname.startswith('/'):
+            fullname = '/'+fullname
+        return rootPath+fullname
     def __getFileName(self):
-        pass
+        fullname = self.__filePath
+        return fullname.split("/")[-1]
     def __checkSize(self):
-        pass
+        return self.__fileSize <= self.__config["maxSize"]
     def __checkType(self):
-        pass
+        return self.__getFileExt() in self.__config["allowFiles"]
 
     def getFileInfo(self):
         return {

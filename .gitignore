@@ -98,6 +98,7 @@ ENV/
 /site
 
 # mypy
+/staticfile/
 .mypy_cache/
 .idea/
 db.sqlite3
