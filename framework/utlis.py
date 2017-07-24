@@ -82,7 +82,7 @@ class Uploader(object):
             except OSError as exc:
                 self.__stateInfo = self.__getStateInfo("ERROR_SIZE_EXCEED")
                 return
-        if not os.path.exists(self.__filePath):
+        if not os.path.exists(self._dirname):
             self.__stateInfo = self.__getStateInfo("ERROR_FILE_MOVE")
             return
         try:

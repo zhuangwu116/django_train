@@ -99,7 +99,12 @@ def controller(request):
             "allowFiles":config_json["imageAllowFiles"]
         }
         uploadhandle = Uploader(request,config_json["imageFieldName"],CONFIG,rootPath)
-        return JsonResponse(uploadhandle.getFileInfo())
+        content = uploadhandle.getFileInfo()
+
+        content["url"] = '/static' + content["url"]
+
+        return JsonResponse(content)
+
     elif action == 'uploadscrawl':
         pass
     elif action == 'uploadvideo':
