@@ -5,6 +5,8 @@ import base64
 import random
 from datetime import datetime
 from django.utils.safestring import mark_for_escaping
+from  tasks import request_http
+
 def handle_uploaded_file(f,path):
     with open(path,'wb+') as destination:
         for chunk in f.chunks():
@@ -61,7 +63,9 @@ class Uploader(object):
         if (not imgUrl.startswith("http")) or (not imgUrl.startswith("https")) :
             self.__stateInfo = self.__getStateInfo("ERROR_HTTP_LINK")
             return
-        
+        http_head,http_content = request_http.delay(imgUrl)
+
+
 
 
     def __upBase64(self):

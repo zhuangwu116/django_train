@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'middleware.apps.MiddlewareConfig',
     'upload.apps.UploadConfig',
     'framework.apps.FrameworkConfig',
+    'django-celery-results'
 ]
 
 MIDDLEWARE = [
