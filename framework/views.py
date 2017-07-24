@@ -5,7 +5,8 @@ from django.shortcuts import render
 from forms import UeditorForm
 from django.http import HttpResponse,JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-
+from framework.utlis import Uploader
+from django11_test.settings import BASE_DIR
 # Create your views here.
 config_json={
     "imageActionName": "uploadimage",
@@ -16,29 +17,29 @@ config_json={
     "imageCompressBorder": 1600,
     "imageInsertAlign": "none",
     "imageUrlPrefix": "",
-    "imagePathFormat": "/ueditor/php/upload/image/{yyyy}{mm}{dd}/{time}{rand:6}",
+    "imagePathFormat": "/ueditor/image/{yyyy}{mm}{dd}/{time}{rand:6}",
     "scrawlActionName": "uploadscrawl",
     "scrawlFieldName": "upfile",
-    "scrawlPathFormat": "/ueditor/php/upload/image/{yyyy}{mm}{dd}/{time}{rand:6}",
+    "scrawlPathFormat": "/ueditor/image/{yyyy}{mm}{dd}/{time}{rand:6}",
     "scrawlMaxSize": 2048000,
     "scrawlUrlPrefix": "",
     "scrawlInsertAlign": "none",
     "snapscreenActionName": "uploadimage",
-    "snapscreenPathFormat": "/ueditor/php/upload/image/{yyyy}{mm}{dd}/{time}{rand:6}",
+    "snapscreenPathFormat": "/ueditor/image/{yyyy}{mm}{dd}/{time}{rand:6}",
     "snapscreenUrlPrefix": "",
     "snapscreenInsertAlign": "none",
 
     "catcherLocalDomain": ["127.0.0.1", "localhost", "img.baidu.com"],
     "catcherActionName": "catchimage",
     "catcherFieldName": "source",
-    "catcherPathFormat": "/ueditor/php/upload/image/{yyyy}{mm}{dd}/{time}{rand:6}",
+    "catcherPathFormat": "/ueditor/image/{yyyy}{mm}{dd}/{time}{rand:6}",
     "catcherUrlPrefix": "",
     "catcherMaxSize": 2048000,
     "catcherAllowFiles": [".png", ".jpg", ".jpeg", ".gif", ".bmp"],
 
     "videoActionName": "uploadvideo",
     "videoFieldName": "upfile",
-    "videoPathFormat": "/ueditor/php/upload/video/{yyyy}{mm}{dd}/{time}{rand:6}",
+    "videoPathFormat": "/ueditor/video/{yyyy}{mm}{dd}/{time}{rand:6}",
     "videoUrlPrefix": "",
     "videoMaxSize": 102400000,
     "videoAllowFiles": [
@@ -47,7 +48,7 @@ config_json={
 
     "fileActionName": "uploadfile",
     "fileFieldName": "upfile",
-    "filePathFormat": "/ueditor/php/upload/file/{yyyy}{mm}{dd}/{time}{rand:6}",
+    "filePathFormat": "/ueditor/file/{yyyy}{mm}{dd}/{time}{rand:6}",
     "fileUrlPrefix": "",
     "fileMaxSize": 51200000,
     "fileAllowFiles": [
@@ -59,13 +60,13 @@ config_json={
     ],
 
     "imageManagerActionName": "listimage",
-    "imageManagerListPath": "/ueditor/php/upload/image/",
+    "imageManagerListPath": "/ueditor/image/",
     "imageManagerListSize": 20,
     "imageManagerUrlPrefix": "",
     "imageManagerInsertAlign": "none",
     "imageManagerAllowFiles": [".png", ".jpg", ".jpeg", ".gif", ".bmp"],
     "fileManagerActionName": "listfile",
-    "fileManagerListPath": "/ueditor/php/upload/file/",
+    "fileManagerListPath": "/ueditor/file/",
     "fileManagerUrlPrefix": "",
     "fileManagerListSize": 20,
     "fileManagerAllowFiles": [
@@ -86,11 +87,19 @@ def index(request):
     return render(request,'framework/index.html',{"form":form})
 @csrf_exempt
 def controller(request):
+    import os
     action = request.GET.get("action")
     if action == 'config':
         return JsonResponse(config_json)
     elif action == 'uploadimage':
-        pass
+        rootPath = os.path.join(BASE_DIR,'staticfile')
+        CONFIG = {
+            "pathFormat":config_json["imagePathFormat"],
+            "maxSize":config_json["imageMaxSize"],
+            "allowFiles":config_json["imageAllowFiles"]
+        }
+        uploadhandle = Uploader(request,config_json["imageFieldName"],CONFIG,rootPath)
+        return JsonResponse(uploadhandle.getFileInfo())
     elif action == 'uploadscrawl':
         pass
     elif action == 'uploadvideo':
