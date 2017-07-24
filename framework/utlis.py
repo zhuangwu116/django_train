@@ -65,6 +65,43 @@ class Uploader(object):
             return
         http_head,http_content = request_http.delay(imgUrl)
 
+        if http_head["status"] is not 200:
+            self.__stateInfo = self.__getStateInfo("ERROR_DEAD_LINK")
+            return
+        content_type = http_head["Content-Type"]
+        fileType='.'+content_type.split('/')[-1]
+        if (not (fileType in self.__config['allowFiles'])) or (not (content_type.split('/')[0] == 'image')):
+            self.__stateInfo = self.__getStateInfo("ERROR_HTTP_CONTENTTYPE")
+            return
+        self.__oriName = imgUrl.split('/')[-1]
+        self.__fileSize = len(http_content)
+        self.__fileType = self.__getFileExt()
+        self.__fullName = self.__getFullName()
+        self.__filePath = self.__getFilePath()
+        self.__fileName = self.__getFileName()
+        _dirname = os.path.dirname(self.__filePath)
+        if not self.__checkSize():
+            self.__stateInfo = self.__getStateInfo("ERROR_SIZE_EXCEED")
+            return
+        if not os.path.exists(_dirname):
+            try:
+                os.makedirs(_dirname, mode=0777)
+            except OSError as exc:
+                self.__stateInfo = self.__getStateInfo("ERROR_SIZE_EXCEED")
+                return
+        if not os.path.exists(_dirname):
+            self.__stateInfo = self.__getStateInfo("ERROR_FILE_MOVE")
+            return
+        try:
+            with open(self.__filePath,'wb+') as f:
+                f.write(http_content)
+        except:
+            self.__stateInfo = self.__getStateInfo("ERROR_FILE_MOVE")
+            return
+        self.__stateInfo = self.__stateMap["SUCCESS"]
+
+
+
 
 
 
