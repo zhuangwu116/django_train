@@ -2,9 +2,9 @@
 from __future__ import unicode_literals
 import os
 import base64
-from datetime import datetime
 import random
-
+from datetime import datetime
+from django.utils.safestring import mark_for_escaping
 def handle_uploaded_file(f,path):
     with open(path,'wb+') as destination:
         for chunk in f.chunks():
@@ -56,8 +56,12 @@ class Uploader(object):
 
 
     def __saveRemote(self):
-
-        pass
+        imgUrl = mark_for_escaping(self.__request.POST.get(self.__fileField))
+        imgUrl = imgUrl.replace("&amp;","&")
+        if (not imgUrl.startswith("http")) or (not imgUrl.startswith("https")) :
+            self.__stateInfo = self.__getStateInfo("ERROR_HTTP_LINK")
+            return
+        
 
 
     def __upBase64(self):
@@ -128,8 +132,6 @@ class Uploader(object):
             self.__stateInfo = self.__getStateInfo("ERROR_FILE_MOVE")
             return
         self.__stateInfo = self.__stateMap["SUCCESS"]
-
-
 
 
     def __getStateInfo(self,error_info):
