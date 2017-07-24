@@ -172,7 +172,7 @@ class Uploader(object):
     def getFileInfo(self):
         return {
             "state":self.__stateInfo,
-            "url":'/static'+self.__fullName,
+            "url":self.__fullName,
             "title":self.__fileName,
             "original":self.__oriName,
             "type":self.__fileType,
