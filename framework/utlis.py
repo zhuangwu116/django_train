@@ -6,7 +6,8 @@ import random
 from datetime import datetime
 from django.utils.safestring import mark_for_escaping
 from  tasks import request_http
-
+from celery.utils.log import get_logger
+logger = get_logger(__name__)
 def handle_uploaded_file(f,path):
     with open(path,'wb+') as destination:
         for chunk in f.chunks():
@@ -63,7 +64,13 @@ class Uploader(object):
         if (not imgUrl.startswith("http")) or (not imgUrl.startswith("https")) :
             self.__stateInfo = self.__getStateInfo("ERROR_HTTP_LINK")
             return
-        http_head,http_content = request_http.delay(imgUrl)
+        try:
+            res =  request_http.delay(imgUrl)
+            http_head,http_content = res.get()
+        except request_http.OperationalError as exc:
+            self.__stateInfo = self.__getStateInfo("ERROR_DEAD_LINK")
+            logger.exception('Sending task raised: %r',exc)
+            return
 
         if http_head["status"] is not 200:
             self.__stateInfo = self.__getStateInfo("ERROR_DEAD_LINK")
@@ -127,7 +134,7 @@ class Uploader(object):
             except OSError as exc:
                 self.__stateInfo = self.__getStateInfo("ERROR_SIZE_EXCEED")
                 return
-        if not os.path.exists(self._dirname):
+        if not os.path.exists(_dirname):
             self.__stateInfo = self.__getStateInfo("ERROR_FILE_MOVE")
             return
         try:
