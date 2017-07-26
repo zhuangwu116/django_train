@@ -78,6 +78,7 @@ TEMPLATES = [
                  os.path.join(os.path.join(BASE_DIR, 'base_view'), 'templates'),
                  os.path.join(os.path.join(BASE_DIR, 'generic'), 'templates'),
                  os.path.join(os.path.join(BASE_DIR,'framework'),'templates'),
+                 os.path.join(os.path.join(BASE_DIR, 'form'), 'templates'),
                  ]
         ,
         'APP_DIRS': True,

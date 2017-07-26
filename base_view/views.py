@@ -478,3 +478,6 @@ class HybridDetailView(JSONResponseMixin,SingleObjectTemplateResponseMixin,BaseD
             return super(HybridDetailView,self).render_to_response(context)
 
 
+
+
+
