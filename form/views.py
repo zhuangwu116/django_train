@@ -12,10 +12,10 @@ def send_mail(request):
             message = forms.cleaned_data['message']
             sender = forms.cleaned_data['sender']
             cc_myself = forms.cleaned_data['cc_myself']
-            recipients = ['info@example.com']
+            recipients = ['562669088@qq.com']
             if cc_myself:
                 recipients.append(sender)
-            send_mail(subject,message,sender,recipients)
+            # send_mail(subject,message,sender,recipients)
     else:
         forms = ContactForm()
-    return render(request,'forms/send_mail.html',{"forms":forms})
+    return render(request,'form/send_mail.html',{"forms":forms})

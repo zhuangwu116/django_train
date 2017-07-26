@@ -3,5 +3,5 @@ from __future__ import unicode_literals
 from django.conf.urls import url
 from form import views
 urlpatterns=[
-    url(r'^$',views.index,name="index"),
+    url(r'^$',views.send_mail,name="index"),
 ]
