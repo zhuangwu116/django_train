@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render
-from forms import ContactForm
+from forms import ContactForm,ArticleFormSet
 # Create your views here.
 def send_mail(request):
     if request.method == 'POST':
@@ -19,3 +19,7 @@ def send_mail(request):
     else:
         forms = ContactForm()
     return render(request,'form/send_mail.html',{"forms":forms})
+
+def articleformset(request):
+    formset = ArticleFormSet()
+    return render(request,'form/articleformset.html',{"formset":formset})
