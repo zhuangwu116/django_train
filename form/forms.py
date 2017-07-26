@@ -13,4 +13,4 @@ class ArticleForm(forms.Form):
     title = forms.CharField()
     pub_date = forms.DateField()
 
-ArticleFormSet = formset_factory(ArticleForm)
+ArticleFormSet = formset_factory(ArticleForm,extra=2)
