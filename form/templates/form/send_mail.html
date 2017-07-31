@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="" method="post">
+    {% csrf_token %}
+    {{ forms.as_p }}
+    <input type="submit" value="send">
+</form>
+</br>
+<form action="" method="post">
+    {% csrf_token %}
+    {{ forms.non_field_errors }}
+    <div class="fieldWrapper">
+        {{ forms.subject.errors }}
+        <label for="{{ forms.subject.id_for_label }}">Email subject:</label>
+        {{ forms.subject }}
+    </div>
+    <div class="fieldWrapper">
+        {{ forms.message.errors }}
+        <label for="{{ forms.message.id_for_label }}">Your message:</label>
+        {{ forms.message }}
+    </div>
+    <div class="fieldWrapper">
+        {{ forms.sender.errors }}
+        <label for="{{ forms.sender.id_for_label }}">Your email address:</label>
+        {{ forms.sender }}
+    </div>
+    <div class="fieldWrapper">
+        {{ forms.cc_myself.errors }}
+        <label for="{{ forms.cc_myself.id_for_label }}">CC yourself?</label>
+        {{ forms.cc_myself }}
+    </div>
+     <input type="submit" value="send">
+</form>
+</br>
+<form>
+    <div class="fieldWrapper">
+    {{ forms.subject.errors }}
+    {{ forms.subject.label_tag }}
+    {{ forms.subject }}
+</div>
+</form>
+{% if forms.subject.errors %}
+    <ol>
+    {% for error in forms.subject.errors %}
+        <li><strong>{{ error|escape }}</strong></li>
+    {% endfor %}
+    </ol>
+{% endif %}
+</br>
+{% for field in forms %}
+    <div class="fieldWrapper">
+        {{ field.errors }}
+        {{ field.label_tag }} {{ field }}
+        {% if field.help_text %}
+        <p class="help">{{ field.help_text|safe }}</p>
+        {% endif %}
+    </div>
+{% endfor %}
+{#{% include "form_snippet.html" with form=comment_form %}#}
+</body>
+</html>

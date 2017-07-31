@@ -8,6 +8,7 @@
 </head>
 <body>
 {% block contentbody %}
+    {{ a | escape }}
     <a href="{% url 'post_list' %}">链接</a>
 {% endblock %}
 </body>

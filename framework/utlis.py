@@ -2,9 +2,12 @@
 from __future__ import unicode_literals
 import os
 import base64
-from datetime import datetime
 import random
-
+from datetime import datetime
+from django.utils.safestring import mark_for_escaping
+from  tasks import request_http
+from celery.utils.log import get_logger
+logger = get_logger(__name__)
 def handle_uploaded_file(f,path):
     with open(path,'wb+') as destination:
         for chunk in f.chunks():
@@ -56,8 +59,57 @@ class Uploader(object):
 
 
     def __saveRemote(self):
+        imgUrl = mark_for_escaping(self.__request.POST.get(self.__fileField))
+        imgUrl = imgUrl.replace("&amp;","&")
+        if (not imgUrl.startswith("http")) or (not imgUrl.startswith("https")) :
+            self.__stateInfo = self.__getStateInfo("ERROR_HTTP_LINK")
+            return
+        try:
+            res =  request_http.delay(imgUrl)
+            http_head,http_content = res.get()
+        except request_http.OperationalError as exc:
+            self.__stateInfo = self.__getStateInfo("ERROR_DEAD_LINK")
+            logger.exception('Sending task raised: %r',exc)
+            return
 
-        pass
+        if http_head["status"] is not 200:
+            self.__stateInfo = self.__getStateInfo("ERROR_DEAD_LINK")
+            return
+        content_type = http_head["Content-Type"]
+        fileType='.'+content_type.split('/')[-1]
+        if (not (fileType in self.__config['allowFiles'])) or (not (content_type.split('/')[0] == 'image')):
+            self.__stateInfo = self.__getStateInfo("ERROR_HTTP_CONTENTTYPE")
+            return
+        self.__oriName = imgUrl.split('/')[-1]
+        self.__fileSize = len(http_content)
+        self.__fileType = self.__getFileExt()
+        self.__fullName = self.__getFullName()
+        self.__filePath = self.__getFilePath()
+        self.__fileName = self.__getFileName()
+        _dirname = os.path.dirname(self.__filePath)
+        if not self.__checkSize():
+            self.__stateInfo = self.__getStateInfo("ERROR_SIZE_EXCEED")
+            return
+        if not os.path.exists(_dirname):
+            try:
+                os.makedirs(_dirname, mode=0777)
+            except OSError as exc:
+                self.__stateInfo = self.__getStateInfo("ERROR_SIZE_EXCEED")
+                return
+        if not os.path.exists(_dirname):
+            self.__stateInfo = self.__getStateInfo("ERROR_FILE_MOVE")
+            return
+        try:
+            with open(self.__filePath,'wb+') as f:
+                f.write(http_content)
+        except:
+            self.__stateInfo = self.__getStateInfo("ERROR_FILE_MOVE")
+            return
+        self.__stateInfo = self.__stateMap["SUCCESS"]
+
+
+
+
 
 
     def __upBase64(self):
@@ -82,7 +134,7 @@ class Uploader(object):
             except OSError as exc:
                 self.__stateInfo = self.__getStateInfo("ERROR_SIZE_EXCEED")
                 return
-        if not os.path.exists(self.__filePath):
+        if not os.path.exists(_dirname):
             self.__stateInfo = self.__getStateInfo("ERROR_FILE_MOVE")
             return
         try:
@@ -128,8 +180,6 @@ class Uploader(object):
             self.__stateInfo = self.__getStateInfo("ERROR_FILE_MOVE")
             return
         self.__stateInfo = self.__stateMap["SUCCESS"]
-
-
 
 
     def __getStateInfo(self,error_info):

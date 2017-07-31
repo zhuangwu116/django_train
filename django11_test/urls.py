@@ -45,6 +45,8 @@ urlpatterns = [
 
     url(r'^framework/',include('framework.urls',namespace='framework')),
 
+    url('^form/',include('form.urls',namespace='form')),
+
     url(r'^admin/', admin.site.urls),
 
 ]

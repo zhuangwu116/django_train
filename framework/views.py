@@ -89,23 +89,50 @@ def index(request):
 def controller(request):
     import os
     action = request.GET.get("action")
+    rootPath = os.path.join(BASE_DIR, 'staticfile')
     if action == 'config':
         return JsonResponse(config_json)
+
     elif action == 'uploadimage':
-        rootPath = os.path.join(BASE_DIR,'staticfile')
         CONFIG = {
             "pathFormat":config_json["imagePathFormat"],
             "maxSize":config_json["imageMaxSize"],
             "allowFiles":config_json["imageAllowFiles"]
         }
-        uploadhandle = Uploader(request,config_json["imageFieldName"],CONFIG,rootPath)
-        return JsonResponse(uploadhandle.getFileInfo())
+        uploadhandle = Uploader(request,config_json["scrawlFieldName"],CONFIG,rootPath)
+        content = uploadhandle.getFileInfo()
+
+        content["url"] = '/static' + content["url"]
+
+        return JsonResponse(content)
+
     elif action == 'uploadscrawl':
-        pass
+        CONFIG = {
+            "pathFormat": config_json["scrawlPathFormat"],
+            "maxSize": config_json["scrawlMaxSize"],
+            "allowFiles": config_json["imageAllowFiles"],
+            "oriName":"scrawl.png"
+        }
+        uploadhandle = Uploader(request, config_json["scrawlFieldName"], CONFIG, rootPath,"base64")
+        content = uploadhandle.getFileInfo()
+
+        content["url"] = '/static' + content["url"]
+
+        return JsonResponse(content)
     elif action == 'uploadvideo':
         pass
     elif action == 'uploadfile':
-        pass
+        CONFIG = {
+            "pathFormat": config_json["filePathFormat"],
+            "maxSize": config_json["fileMaxSize"],
+            "allowFiles": config_json["fileAllowFiles"],
+        }
+        uploadhandle = Uploader(request, config_json["fileFieldName"], CONFIG, rootPath)
+        content = uploadhandle.getFileInfo()
+
+        content["url"] = '/static' + content["url"]
+
+        return JsonResponse(content)
     elif action == 'listimage':
         pass
     elif action == 'listfile':
