@@ -20,6 +20,11 @@ class ArticleForm(forms.Form):
 ArticleFormSet = formset_factory(ArticleForm)
 ArticleFormSetS = formset_factory(ArticleForm,extra=2)
 
+#如果validate_max=True 被提交给 formset_factory(), validation 将在数据集中检查被提交表单的数量,
+# 减去被标记删除的, 必须小于等于max_num.
+#validate_max=True validates 将会对max_num 严格限制，即使提供的初始数据超过 max_num 而导致其无效
+MaxArticleFormSet = formset_factory(ArticleForm,max_num=1,validate_max=True)
+
 #自定义表单集验证
 class BaseArticleFormSet(BaseFormSet):
     def clean(self):
