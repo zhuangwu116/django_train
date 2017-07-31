@@ -24,6 +24,10 @@ ArticleFormSetS = formset_factory(ArticleForm,extra=2)
 # 减去被标记删除的, 必须小于等于max_num.
 #validate_max=True validates 将会对max_num 严格限制，即使提供的初始数据超过 max_num 而导致其无效
 MaxArticleFormSet = formset_factory(ArticleForm,max_num=1,validate_max=True)
+#如果validate_min=True被传递到formset_factory()，验证也将检查数据集中的表格数量
+# 减去那些被标记为删除的表格数量大于或等于到min_num。
+MinArticleFormSet = formset_factory(ArticleForm,min_num=3,validate_min=True)
+
 
 #自定义表单集验证
 class BaseArticleFormSet(BaseFormSet):

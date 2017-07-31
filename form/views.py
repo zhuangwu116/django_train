@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render
-from forms import ContactForm,ArticleFormSet,CustomArticleFormSet,MaxArticleFormSet
+from forms import ContactForm,ArticleFormSet,CustomArticleFormSet,MaxArticleFormSet,MinArticleFormSet
 import datetime
 # Create your views here.
 def send_mail(request):
@@ -97,4 +97,21 @@ def formset_validate_max(request):
     print formset.errors
     print formset.non_form_errors()
     return render(request, 'form/articleformset.html', {'formset': formset})
+def formset_validate_min(request):
+    data = {
+        'form-TOTAL_FORMS': '2',
+        'form-INITIAL_FORMS': '0',
+        'form-MIN_NUM_FORMS': '',
+        'form-MAX_NUM_FORMS': '',
+        'form-0-title': 'Test',
+        'form-0-pub_date': '1904-06-16',
+        'form-1-title': 'Test',
+        'form-1-pub_date': '1912-06-23',
+    }
+    formset = MinArticleFormSet(data)
+    print formset.is_valid()
+    print formset.errors
+    print formset.non_form_errors()
+    return render(request, 'form/articleformset.html', {'formset': formset})
+
 
