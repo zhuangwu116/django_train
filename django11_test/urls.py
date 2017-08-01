@@ -15,11 +15,18 @@ Including another URLconf
 """
 from django.conf.urls import url,include
 from django.contrib import admin
+from django.contrib.sitemaps.views import sitemap
+
 from datetime import datetime
+
 import django.contrib.auth.views
 import vsdemo.forms
+
 admin.autodiscover()
+
 urlpatterns = [
+    url(r'^sitemap\.xml$',sitemap,{'sitemaps':sitemap},name='django.contrib.sitemaps.views.sitemap'),
+
     url(r'^',include('vsdemo.urls',namespace='vsdemo')),
     url(r'^contact$',vsdemo.views.contact,name='contact'),
     url(r'^about',vsdemo.views.about,name='about'),
@@ -45,7 +52,9 @@ urlpatterns = [
 
     url(r'^framework/',include('framework.urls',namespace='framework')),
 
-    url('^form/',include('form.urls',namespace='form')),
+    url(r'^form/',include('form.urls',namespace='form')),
+
+    url(r'^site_maps/',include('site_map.urls')),
 
     url(r'^admin/', admin.site.urls),
 

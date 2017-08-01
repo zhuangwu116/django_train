@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sitemaps',
+
     'djangtestdemo.apps.DjangtestdemoConfig',
     'vsdemo.apps.VsdemoConfig',
     'base_view.apps.BaseViewConfig',
@@ -55,7 +57,8 @@ INSTALLED_APPS = [
     'middleware.apps.MiddlewareConfig',
     'upload.apps.UploadConfig',
     'framework.apps.FrameworkConfig',
-
+    'form.apps.FormConfig',
+    'site_map.apps.SiteMapConfig',
 ]
 
 MIDDLEWARE = [
@@ -79,6 +82,7 @@ TEMPLATES = [
                  os.path.join(os.path.join(BASE_DIR, 'generic'), 'templates'),
                  os.path.join(os.path.join(BASE_DIR,'framework'),'templates'),
                  os.path.join(os.path.join(BASE_DIR, 'form'), 'templates'),
+                 os.path.join(os.path.join(BASE_DIR, 'site_map'), 'templates'),
                  ]
         ,
         'APP_DIRS': True,
