@@ -21,6 +21,8 @@ class UeditorForm(forms.Form):
     title = forms.CharField(max_length=50,widget=forms.TextInput(attrs={"id":"title",}))
     content = forms.CharField(max_length=5000,widget=UeditorInput(attrs={"id":"container",}))
 
+
+
 def get_edit_form(obj, field_names, data=None, files=None):
     widget_overrides = {
         forms.Textarea:UeditorInput
@@ -40,7 +42,8 @@ def get_edit_form(obj, field_names, data=None, files=None):
             super(EditForm,self).__init__(*args, **kwargs)
             self.uuid = str(uuid4())
             for f in self.fields.keys():
-                field_class = self.fields[f].__class__
+                field_class = self.fields[f].widget.__class__
+                print field_class
                 try:
                     widget = widget_overrides[field_class]
                 except KeyError:

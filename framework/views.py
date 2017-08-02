@@ -2,11 +2,12 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render
-from forms import UeditorForm
+from forms import UeditorForm,get_edit_form
 from django.http import HttpResponse,JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from framework.utlis import Uploader
 from django11_test.settings import BASE_DIR
+from models import EditBook
 # Create your views here.
 config_json={
     "imageActionName": "uploadimage",
@@ -142,3 +143,10 @@ def controller(request):
     else:
         pass
     return HttpResponse(status=200)
+
+def get_form(request):
+
+    obj = EditBook(name='aaaa',desc='bbbbb')
+    forms = get_edit_form(obj=obj,field_names='name,desc')
+
+    return render(request,'framework/edit_form.html',{"forms":forms})

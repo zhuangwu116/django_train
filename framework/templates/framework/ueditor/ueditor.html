@@ -1,6 +1,6 @@
 <script type="text/plain" name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %} >{% if widget.value != None %}{{ widget.value|safe }}{% endif %}</script>
 <script type="text/javascript">
-        var ue = UE.getEditor('{% for name, value in widget.attrs.items %}{% if name is "id" %} {{ name }}{% if value is not True %}="{{ value|stringformat:'s' }}"{% endif %}{% endif %}{% endfor %}',{
+        var ue = UE.getEditor('{% for name, value in widget.attrs.items %}{% if name == "id" %}{{ value|stringformat:'s' }}{% endif %}{% endfor %}',{
         initialFrameWidth : 600,
         initialFrameHeight: 300
 	});
