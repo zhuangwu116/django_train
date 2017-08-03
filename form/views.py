@@ -2,7 +2,10 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render
-from forms import ContactForm,ArticleFormSet,CustomArticleFormSet,MaxArticleFormSet,MinArticleFormSet
+from django.forms.formsets import formset_factory
+from forms import ContactForm,ArticleFormSet,\
+    CustomArticleFormSet,MaxArticleFormSet,\
+    MinArticleFormSet,ArticleForm,AddArticleFormSet
 import datetime
 # Create your views here.
 def send_mail(request):
@@ -113,5 +116,109 @@ def formset_validate_min(request):
     print formset.errors
     print formset.non_form_errors()
     return render(request, 'form/articleformset.html', {'formset': formset})
+#
+# 表单的排序和删除行为¶
+#
+# formset_factory()提供两个可选参数can_order 和can_delete 来实现表单集中表单的排序和删除。
+def formset_can_order(request):
+    data= {
+        'form-TOTAL_FORMS': '3',
+        'form-INITIAL_FORMS': '2',
+        'form-MAX_NUM_FORMS': '',
+        'form-0-title': 'Article #1',
+        'form-0-pub_date': '2008-05-10',
+        'form-0-ORDER': '2',
+        'form-1-title': 'Article #2',
+        'form-1-pub_date': '2008-05-11',
+        'form-1-ORDER': '1',
+        'form-2-title': 'Article #3',
+        'form-2-pub_date': '2008-05-01',
+        'form-2-ORDER': '0',
+    }
+    ArticleFormSetOrder = formset_factory(ArticleForm,can_order=True)
+    formset = ArticleFormSetOrder(data,initial=[
+        {'title':'Article #1','pub_date':datetime.date(2008,5,10)},
+        {'title':'Article #2','pub_date':datetime.date(2008,5,11)},
+    ])
+    if formset.is_valid():
+        for form in formset.ordered_forms:
+            print(form.cleaned_data)
+    return render(request, 'form/articleformset.html', {'formset': formset})
 
+def formset_can_delete(request):
+    data= {
+        'form-TOTAL_FORMS': '3',
+        'form-INITIAL_FORMS': '2',
+        'form-MAX_NUM_FORMS': '',
+        'form-0-title': 'Article #1',
+        'form-0-pub_date': '2008-05-10',
+        'form-0-DELETE': 'on',
+        'form-1-title': 'Article #2',
+        'form-1-pub_date': '2008-05-11',
+        'form-1-DELETE': '',
+        'form-2-title': 'Article #3',
+        'form-2-pub_date': '2008-05-01',
+        'form-2-DELETE': '',
+    }
+    ArticleFormSetDelete = formset_factory(ArticleForm,can_delete=True)
+    formset = ArticleFormSetDelete(data,initial=[
+        {'title': 'Article #1', 'pub_date': datetime.date(2008, 5, 10)},
+        {'title': 'Article #2', 'pub_date': datetime.date(2008, 5, 11)},
+    ])
+    for form in formset.deleted_forms:
+        print form.cleaned_data
+    instances = formset.save(commit = False)
+    for obj in formset.deleted_objects:
+         obj.delete()
 
+    return render(request, 'form/articleformset.html', {'formset': formset})
+
+def formset_add_fields(request):
+    AddFormSet = formset_factory(ArticleForm,formset=AddArticleFormSet)
+    formset = AddFormSet()
+    return render(request, 'form/articleformset.html', {'formset': formset})
+
+def formset_myarticleform(request):
+    class MyArticleForm(ArticleForm):
+        def __init__(self,*args,**kwargs):
+            self.user = kwargs.pop('user')
+            super(MyArticleForm,self).__init__(*args,**kwargs)
+    ArticleFormSet = formset_factory(MyArticleForm)
+    formset = ArticleFormSet(form_kwargs={'user':request.user})
+    from django.forms import BaseFormSet
+    class BaseArticleFormSet(BaseFormSet):
+        def get_form_kwargs(self,index):
+            kwargs = super(BaseArticleFormSet, self).get_form_kwargs(index)
+            kwargs['custom_kwarg'] = index
+            return kwargs
+    return render(request, 'form/articleformset.html', {'formset': formset})
+def manage_articles(request):
+    if request.method == 'POST':
+        formset = ArticleFormSet(request.POST,request.FILES)
+        if formset.is_valid():
+            pass
+        else:
+            formset = ArticleFormSet()
+    return render(request, 'form/manage_articles.html', {'formset': formset})
+#视图中使用多个表单集
+
+# 可以在视图中使用多个表单集，表单集从表单中借鉴了很多方法你可以使用
+# prefix 给每个表单字段添加前缀，以允许多个字段传递给视图，而不发生命名冲突 让我们看看可以怎么做
+
+#以以正常的方式渲染模板。记住 prefix 在POST请求和非POST 请求中均需设置，以便他能渲染和执行正确
+def manage_articles(request):
+    ArticleFormSet = formset_factory(ArticleForm)
+    BookFormSet = formset_factory(BookForm)
+    if request.method == 'POST':
+        article_formset = ArticleFormSet(request.POST, request.FILES, prefix='articles')
+        book_formset = BookFormSet(request.POST, request.FILES, prefix='books')
+        if article_formset.is_valid() and book_formset.is_valid():
+            # do something with the cleaned_data on the formsets.
+            pass
+    else:
+        article_formset = ArticleFormSet(prefix='articles')
+        book_formset = BookFormSet(prefix='books')
+    return render(request, 'manage_articles.html', {
+        'article_formset': article_formset,
+        'book_formset': book_formset,
+    })
