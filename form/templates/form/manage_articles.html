@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form method="post" action="">
+    {{ formset.management_form }}
+    <table>
+        {% for form in formset %}
+        {{ form }}
+        {% endfor %}
+    </table>
+</form>
+<form method="post" action="">
+    <table>
+        {{ formset }}
+    </table>
+</form>
+{#Manually rendered can_delete and can_order#}
+{#<form method="post" action="">#}
+{#    {{ formset.management_form }}#}
+{#    {% for form in formset %}#}
+{#        <ul>#}
+{#            <li>{{ form.title }}</li>#}
+{#            <li>{{ form.pub_date }}</li>#}
+{#            {% if formset.can_delete %}#}
+{#                <li>{{ form.DELETE }}</li>#}
+{#            {% endif %}#}
+{#        </ul>#}
+{#    {% endfor %}#}
+{#</form>#}
+</body>
+</html>

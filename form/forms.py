@@ -41,3 +41,12 @@ class BaseArticleFormSet(BaseFormSet):
                 raise forms.ValidationError("Articles in a set must have distinct titles.")
             titles.append(title)
 CustomArticleFormSet = formset_factory(ArticleFormSet,formset=BaseArticleFormSet)
+
+# 给表单集添加一个额外的字段
+#
+# 如果你想往表单集中添加额外的字段，是十分容易完成的，表单集的基类（BaseFormSet）提供了 add_fields 方法。
+# 可以简单的通过重写这个方法来添加你自己的字段，甚至重新定义order和deletion字段的方法和属性：
+class AddArticleFormSet(BaseFormSet):
+    def add_fields(self, form, index):
+        super(AddArticleFormSet,self).add_fields(form,index)
+        form.fields['my_field'] = forms.CharField()
