@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'framework.apps.FrameworkConfig',
     'form.apps.FormConfig',
     'site_map.apps.SiteMapConfig',
+    'testapp.apps.TestappConfig',
 ]
 
 MIDDLEWARE = [
@@ -83,6 +84,7 @@ TEMPLATES = [
                  os.path.join(os.path.join(BASE_DIR,'framework'),'templates'),
                  os.path.join(os.path.join(BASE_DIR, 'form'), 'templates'),
                  os.path.join(os.path.join(BASE_DIR, 'site_map'), 'templates'),
+                 os.path.join(os.path.join(BASE_DIR, 'testapp'), 'templates'),
                  ]
         ,
         'APP_DIRS': True,

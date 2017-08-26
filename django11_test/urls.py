@@ -56,6 +56,8 @@ urlpatterns = [
 
     url(r'^site_maps/',include('site_map.urls')),
 
+    url(r'test/',include('testapp.urls')),
+
     url(r'^admin/', admin.site.urls),
 
 ]
