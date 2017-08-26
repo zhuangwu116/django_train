@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render,reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect,JsonResponse
 from django.views.generic.edit import FormView
 from .forms import UploadFileForm,FileFieldForm
 
@@ -48,4 +48,17 @@ class FileFieldView(FormView):
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
+
+def arrayfileupload(request):
+    if request.is_ajax():
+        files=request.FILES.getlist("files");
+        if files:
+            print("aaaaaaaaaaaaaaaaaaaaaaa")
+        else:
+            print("bbbbbbbbbbbbbbbbbb")
+        for file in files:
+            print file.name
+
+        return JsonResponse({"state":0})
+    return render(request,template_name="upload/arrayfile.html")
 
